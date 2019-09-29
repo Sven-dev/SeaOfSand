@@ -12,6 +12,8 @@ public class CameraManager : MonoBehaviour
     {
         Speed = 0;
         MaxSpeed = 1;
+
+        Controller.OnRightStick += Move;
 	}
 	
 	// Update is called once per frame
@@ -22,7 +24,7 @@ public class CameraManager : MonoBehaviour
     /// <summary>
     /// moves the camera in one of 8 axis
     /// </summary>
-    public void Move(string axis, float value)
+    public void Move(Stick stick)
     {
         StartCoroutine(_Move(axis, value));
     }
