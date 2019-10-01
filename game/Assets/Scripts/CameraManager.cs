@@ -27,7 +27,6 @@ public class CameraManager : MonoBehaviour
 
     IEnumerator _Move()
     {
-        print("THE CODING GOD HATH SPOKE");
         Moving = true;
         while (Moving)
         {

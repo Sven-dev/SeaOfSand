@@ -28,6 +28,7 @@ public class CursorManager : MonoBehaviour
         {
             if (!Moving)
             {
+                Moving = true;
                 StartCoroutine(_Move());
             }
         }
@@ -35,7 +36,6 @@ public class CursorManager : MonoBehaviour
 
     IEnumerator _Move()
     {
-        Moving = true;
         while (Moving)
         {
             //Check if the stick is still tilted
@@ -79,16 +79,6 @@ public class CursorManager : MonoBehaviour
                     #endregion
 
                     transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
-
-                    //CursorCube.Translate(direction * Speed * Time.deltaTime, Space.Self);
-                    //Vector2 screenPos = Camera.main.WorldToScreenPoint(CursorCube.localPosition);
-                    //screenPos.z = 0;
-                    //transform.localPosition ;
-                    //screenPos.x -= 490.3267f;
-                    //screenPos.y -= 307.8012f;
-
-                    //GetComponent<RectTransform>().anchoredPosition= screenPos;
-                    //GetComponent<RectTransform>().anchoredPosition3D = screenPos;
                 }
                 else
                 {
