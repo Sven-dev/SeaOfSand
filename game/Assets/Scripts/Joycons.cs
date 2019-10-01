@@ -4,27 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Controller : MonoBehaviour
+public class Joycons : MonoBehaviour
 {
-    private List<Joycon> Joycons;
-
-    private Stick StickLeft;
-    private Stick StickRight;
-
-    public delegate void StickMove(Stick stick);
-    public static StickMove OnLeftStick;
-    public static StickMove OnRightStick;
+    public static Joycon Left;
+    public static Joycon Right;
 
     // Start is called before the first frame update
     void Start()
     {
-        Joycons = JoyconManager.Instance.j;
-        StickLeft = new Stick();
-        StickRight = new Stick();
+        List<Joycon> Joycons = JoyconManager.Instance.j;
+        Left = Joycons[0];
+        Right = Joycons[1];
 
         if (Joycons.Count < 2)
         {
-            new System.Exception("JoyconMissingException: One or more joycons are missing");
+            throw new Exception("JoyconMissingException: One or more joycons are missing");
         }
         else if (Joycons.Count > 2)
         {
@@ -32,6 +26,7 @@ public class Controller : MonoBehaviour
         }
     }
 
+    /*
     // Update is called once per frame
     void Update()
     {
@@ -85,6 +80,17 @@ public class Controller : MonoBehaviour
         if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_RIGHT))
         {
             print("A");
+            //Joycons[1].SetRumble(160, 320, 0.6f, 200);
+        }
+
+        if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_RIGHT))
+        {
+            StartCoroutine(_Pulse());
+        }
+
+        if (Joycons[1].GetButtonUp(Joycon.Button.DPAD_RIGHT))
+        {
+            Joycons[1].SetRumble(160, 320, 0);
         }
 
         if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_DOWN))
@@ -120,48 +126,47 @@ public class Controller : MonoBehaviour
         #region Sticks
         //Left stick
         float[] stick = Joycons[0].GetStick();
-        if (StickLeft.X != stick[0])
-        {
-            StickLeft.X = stick[0];
-        }
-        if (StickLeft.Y != stick[0])
-        {
-            StickLeft.Y = stick[1];
-        }
-
         //Checks if the stick is getting moved enough
-        if (Mathf.Abs(StickLeft.X) > 0.2f || Mathf.Abs(StickLeft.Y) > 0.2f)
+        if (Mathf.Abs(stick[0]) > 0.2f || Mathf.Abs(stick[1]) > 0.2f)
         {
             //Start moving the cursor
+            OnLeftStick(Joycons[0]);
         }
 
         //Right stick
         stick = Joycons[1].GetStick();
-        if (StickRight.X != stick[0])
-        {
-            StickRight.X = stick[0];
-        }
-        if (StickRight.Y != stick[0])
-        {
-            StickRight.Y = stick[1];
-        }
-
         //Checks if the stick is getting moved enough
-        if (Mathf.Abs(StickRight.X) > 0.2f || Mathf.Abs(StickRight.Y) > 0.2f)
+        if (Mathf.Abs(stick[0]) > 0.2f || Mathf.Abs(stick[1]) > 0.2f)
         {
             //Start moving the camera
+            OnRightStick(Joycons[1]);
         }
         #endregion
     }
+    */
 
-    //Unsubscribe from all events
-    private void OnDestroy()
+    //Makes the joycon pulse while the button is pressed
+    IEnumerator _Pulse()
     {
-        List<Delegate> events = OnLeftStick.GetInvocationList().ToList();
-        events.AddRange(OnRightStick.GetInvocationList().ToList());
-        foreach (var d in events)
+        int signum = 1;
+        float time = 0;
+        while(Right.GetButton(Joycon.Button.DPAD_RIGHT))
         {
-            OnLeftStick -= (d as StickMove);
+            float amp = Mathf.Lerp(0.1f, 0.6f, time);
+            Right.SetRumble(160, 320, amp);
+
+            time += Time.deltaTime * 2.5f * signum;
+
+            if (time >= 1)
+            {
+                signum = -1;
+            }
+            else if (time <= 0)
+            {
+                signum = 1;
+            }
+
+            yield return null;
         }
     }
 }

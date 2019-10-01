@@ -4,45 +4,46 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
-    private float Speed;
-    private float MaxSpeed;
+    public float Speed;
+    private bool Moving;
 
 	// Use this for initialization
 	void Start ()
     {
-        Speed = 0;
-        MaxSpeed = 1;
-
-        Controller.OnRightStick += Move;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        Moving = false;
 	}
 
-    /// <summary>
-    /// moves the camera in one of 8 axis
-    /// </summary>
-    public void Move(Stick stick)
+    private void Update()
     {
-        StartCoroutine(_Move(axis, value));
+        float[] stick = Joycons.Right.GetStick();
+        if (Mathf.Abs(stick[0]) > 0.2f || Mathf.Abs(stick[1]) > 0.2f)
+        {
+            if (!Moving)
+            {
+                StartCoroutine(_Move());
+            }
+        }
     }
 
-    IEnumerator _Move(Stick stick, string axis, int direction)
+    IEnumerator _Move()
     {
-        if (axis == "X")
+        print("THE CODING GOD HATH SPOKE");
+        Moving = true;
+        while (Moving)
         {
-            Controller.Stick2X;
-        }
-        else // if (axis == "Y")
-        {
-            Controller.Stick2Y;
-        }
+            //Check if the stick is still tilted
+            float[] stick = Joycons.Right.GetStick();
+            if (Mathf.Abs(stick[0]) < 0.2f && Mathf.Abs(stick[1]) < 0.2f)
+            {
+                Moving = false;
+            }
+            else
+            {
+                Vector3 direction = new Vector3(stick[0], 0, stick[1]);
+                transform.Translate( direction * Speed * Time.deltaTime, Space.Self);
+            }
 
-        while ()
-        {
-            transform.Translate(direction * );
+            yield return null;
         }
     }
 }
