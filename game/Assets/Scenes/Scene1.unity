@@ -652,6 +652,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acff6fd53ef82b41b8d134aa48737c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  X: 1
+  Y: 0.61
   Speed: 4
   CursorCube: {fileID: 1971605115}
 --- !u!114 &369809512
