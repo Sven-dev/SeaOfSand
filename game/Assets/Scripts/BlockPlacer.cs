@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BlockPlacer : MonoBehaviour {
-
+public class BlockPlacer : MonoBehaviour
+{
     public Block Prefab;
-    public Image temp;
 
     private float Yaxis;
     private List<List<Block>> UndoList;
@@ -69,6 +68,9 @@ public class BlockPlacer : MonoBehaviour {
     {
         Block b = Instantiate(Prefab, position, Quaternion.identity);
         UndoList[UndoList.Count-1].Add(b);
+
+        Joycons.Left.SetRumble(160, 320, 0.25f, 50);
+        Joycons.Right.SetRumble(160, 320, 0.25f, 50);
         return b;
     }
 

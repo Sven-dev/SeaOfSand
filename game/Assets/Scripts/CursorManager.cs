@@ -4,21 +4,16 @@ using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
-    [Range(0.00f, 1.00f)]
-    public float X;
+    public float TopSpeed;
 
-    [Range(0.00f, 1.00f)]
-    public float Y;
-
-    public float Speed;
     private bool Moving;
-
-    public Transform CursorCube;
+    private RectTransform rect;
 
     // Use this for initialization
     void Start ()
     {
         Moving = false;
+        rect = GetComponent<RectTransform>();
     }
 
     private void Update()
@@ -36,6 +31,7 @@ public class CursorManager : MonoBehaviour
 
     IEnumerator _Move()
     {
+        float speed = TopSpeed / 2;
         while (Moving)
         {
             //Check if the stick is still tilted
@@ -55,40 +51,54 @@ public class CursorManager : MonoBehaviour
                     //Upright
                     if (stick[0] > 0 && stick[1] > 0)
                     {
-                        direction = new Vector3(1 * X, 1 * Y);
-                        print("upright");
+                        direction = new Vector3(1, 0.585f);
                     }
                     //Upleft
                     else if (stick[0] < 0 && stick[1] > 0)
                     {
-                        direction = new Vector3(-1 * X, 1 * Y);
-                        print("upleft");
+                        direction = new Vector3(-1, 0.585f);
                     }
                     //Downright
                     else if (stick[0] > 0 && stick[1] < 0)
                     {
-                        direction = new Vector3(1 * X, -1 * Y);
-                        print("downright");
+                        direction = new Vector3(1, -0.585f);
                     }
                     //Downleft
                     else if (stick[0] < 0 && stick[1] < 0)
                     {
-                        direction = new Vector3(-1 * X, -1 * Y);
-                        print("downleft");
+                        direction = new Vector3(-1, -0.585f);
                     }
                     #endregion
 
-                    transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
+                    transform.Translate(direction * (TopSpeed / 2) * Time.deltaTime, Space.Self);
+                    Clamp();
                 }
                 else
                 {
                     //Move omnidirectionally 
                     Vector2 direction = new Vector2(stick[0], stick[1]);
-                    transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
+                    transform.Translate(direction * speed * Time.deltaTime, Space.Self);
+                    Clamp();
+
+                    if (speed <= TopSpeed)
+                    {
+                        speed += TopSpeed * Time.deltaTime;
+                    }
                 }
             }
 
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Clamps the cursor so it can't move outside of the camera space
+    /// </summary>
+    private void Clamp()
+    {
+        float x = Mathf.Clamp(rect.anchoredPosition.x, 0, Screen.width);
+        float y = Mathf.Clamp(rect.anchoredPosition.y, 0, Screen.height);
+
+        rect.anchoredPosition = new Vector2(x, y);
     }
 }
