@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
-    public float TopSpeed;
+    public float MaxSpeed;
+    public CameraZoomer CameraZoom;
 
     private bool Moving;
     private RectTransform rect;
@@ -29,7 +30,8 @@ public class CursorManager : MonoBehaviour
 
     IEnumerator _Move()
     {
-        float speed = TopSpeed / 2;
+        //Mod makes the cursor start of slower the more the camera is zoomed out for precise movement
+        float mod = 0.1f * (10 - (CameraZoom.Zoom - 2));
         while (Moving)
         {
             //Check if the stick is still tilted
@@ -40,14 +42,15 @@ public class CursorManager : MonoBehaviour
             }
             else
             {
+                Vector3 direction = Vector3.zero;
+
                 //If the A button is pressed
                 if (Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
                 {
-                    //Move diagonally
-                    Vector3 direction = Vector3.zero;
+                    //direction is diagonal
                     #region Define a diagonal
                     //Upright
-                    if (stick[0] > 0 && stick[1] > 0)
+                    if (stick[0] >= 0 && stick[1] >= 0)
                     {
                         direction = new Vector3(1, 0.585f);
                     }
@@ -57,7 +60,7 @@ public class CursorManager : MonoBehaviour
                         direction = new Vector3(-1, 0.585f);
                     }
                     //Downright
-                    else if (stick[0] > 0 && stick[1] < 0)
+                    else if (stick[0] >= 0 && stick[1] <= 0)
                     {
                         direction = new Vector3(1, -0.585f);
                     }
@@ -67,22 +70,22 @@ public class CursorManager : MonoBehaviour
                         direction = new Vector3(-1, -0.585f);
                     }
                     #endregion
-
-                    transform.Translate(direction * (TopSpeed / 2) * Time.deltaTime, Space.Self);
-                    Clamp();
                 }
                 else
                 {
-                    //Move omnidirectionally 
-                    Vector2 direction = new Vector2(stick[0], stick[1]);
-                    transform.Translate(direction * speed * Time.deltaTime, Space.Self);
-                    Clamp();
-
-                    if (speed <= TopSpeed)
+                    //direction is omnidirectional
+                    direction = new Vector2(stick[0], stick[1]);
+                    
+                    //Up the speed a little
+                    if (mod < 1)
                     {
-                        speed += TopSpeed * Time.deltaTime;
+                        mod += Time.deltaTime;
                     }
                 }
+
+                //Move
+                transform.Translate(direction * MaxSpeed * mod * Time.deltaTime, Space.Self);
+                Clamp();
             }
 
             yield return null;
