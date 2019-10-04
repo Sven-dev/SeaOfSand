@@ -9,6 +9,15 @@ public class Joycons : MonoBehaviour
     public static Joycon Left;
     public static Joycon Right;
 
+    [Range(0, 1f)]
+    public float StickActivation = 0.2f;
+
+    #region Events
+    public delegate void OnStick();
+    public static OnStick OnLeftStick;
+    public static OnStick OnRightStick;
+    #endregion
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,29 +35,28 @@ public class Joycons : MonoBehaviour
         }
     }
 
-    /*
     // Update is called once per frame
     void Update()
     {
         #region Triggers & bumpers
         //Triggers
-        if (Joycons[0].GetButtonDown(Joycon.Button.SHOULDER_2))
+        if (Left.GetButtonDown(Joycon.Button.SHOULDER_2))
         {
             print("Left Trigger");
         }
 
-        if (Joycons[1].GetButtonDown(Joycon.Button.SHOULDER_2))
+        if (Right.GetButtonDown(Joycon.Button.SHOULDER_2))
         {
             print("Right Trigger");
         }
 
         //Bumpers
-        if (Joycons[0].GetButtonDown(Joycon.Button.SHOULDER_1))
+        if (Left.GetButtonDown(Joycon.Button.SHOULDER_1))
         {
             print("Left Bumper");
         }
 
-        if (Joycons[1].GetButtonDown(Joycon.Button.SHOULDER_1))
+        if (Right.GetButtonDown(Joycon.Button.SHOULDER_1))
         {
             print("Right Bumper");
         }
@@ -56,54 +64,43 @@ public class Joycons : MonoBehaviour
 
         #region D-pad & ABYX buttons
         //D-pad
-        if (Joycons[0].GetButtonDown(Joycon.Button.DPAD_RIGHT))
+        if (Left.GetButtonDown(Joycon.Button.DPAD_RIGHT))
         {
             print("D-pad right");
         }
 
-        if (Joycons[0].GetButtonDown(Joycon.Button.DPAD_DOWN))
+        if (Left.GetButtonDown(Joycon.Button.DPAD_DOWN))
         {
             print("D-pad down");
         }
 
-        if (Joycons[0].GetButtonDown(Joycon.Button.DPAD_LEFT))
+        if (Left.GetButtonDown(Joycon.Button.DPAD_LEFT))
         {
             print("D-pad left");
         }
 
-        if (Joycons[0].GetButtonDown(Joycon.Button.DPAD_UP))
+        if (Left.GetButtonDown(Joycon.Button.DPAD_UP))
         {
             print("D-pad up");
         }
 
         //ABYX
-        if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_RIGHT))
+        if (Right.GetButtonDown(Joycon.Button.DPAD_RIGHT))
         {
             print("A");
-            //Joycons[1].SetRumble(160, 320, 0.6f, 200);
         }
 
-        if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_RIGHT))
-        {
-            StartCoroutine(_Pulse());
-        }
-
-        if (Joycons[1].GetButtonUp(Joycon.Button.DPAD_RIGHT))
-        {
-            Joycons[1].SetRumble(160, 320, 0);
-        }
-
-        if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_DOWN))
+        if (Right.GetButtonDown(Joycon.Button.DPAD_DOWN))
         {
             print("B");
         }
 
-        if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_LEFT))
+        if (Right.GetButtonDown(Joycon.Button.DPAD_LEFT))
         {
             print("Y");
         }
 
-        if (Joycons[1].GetButtonDown(Joycon.Button.DPAD_UP))
+        if (Right.GetButtonDown(Joycon.Button.DPAD_UP))
         {
             print("X");
         }
@@ -111,13 +108,13 @@ public class Joycons : MonoBehaviour
 
         #region Plus & Minus
         //Minus
-        if (Joycons[0].GetButtonDown(Joycon.Button.MINUS))
+        if (Left.GetButtonDown(Joycon.Button.MINUS))
         {
             print("Minus");
         }
 
         //Plus
-        if (Joycons[1].GetButtonDown(Joycon.Button.PLUS))
+        if (Right.GetButtonDown(Joycon.Button.PLUS))
         {
             print("Plus");
         }
@@ -125,25 +122,24 @@ public class Joycons : MonoBehaviour
 
         #region Sticks
         //Left stick
-        float[] stick = Joycons[0].GetStick();
+        float[] stick = Left.GetStick();
         //Checks if the stick is getting moved enough
-        if (Mathf.Abs(stick[0]) > 0.2f || Mathf.Abs(stick[1]) > 0.2f)
+        if (Mathf.Abs(stick[0]) > StickActivation || Mathf.Abs(stick[1]) > StickActivation)
         {
             //Start moving the cursor
-            OnLeftStick(Joycons[0]);
+            OnLeftStick();
         }
 
         //Right stick
-        stick = Joycons[1].GetStick();
+        stick = Right.GetStick();
         //Checks if the stick is getting moved enough
-        if (Mathf.Abs(stick[0]) > 0.2f || Mathf.Abs(stick[1]) > 0.2f)
+        if (Mathf.Abs(stick[0]) > StickActivation || Mathf.Abs(stick[1]) > StickActivation)
         {
             //Start moving the camera
-            OnRightStick(Joycons[1]);
+            OnRightStick();
         }
         #endregion
     }
-    */
 
     //Makes the joycon pulse while the button is pressed
     IEnumerator _Pulse()

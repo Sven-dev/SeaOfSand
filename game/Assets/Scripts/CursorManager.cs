@@ -14,18 +14,16 @@ public class CursorManager : MonoBehaviour
     {
         Moving = false;
         rect = GetComponent<RectTransform>();
+
+        Joycons.OnLeftStick += Move;
     }
 
-    private void Update()
+    private void Move()
     {
-        float[] stick = Joycons.Left.GetStick();
-        if (Mathf.Abs(stick[0]) > 0.2f || Mathf.Abs(stick[1]) > 0.2f)
+        if (!Moving)
         {
-            if (!Moving)
-            {
-                Moving = true;
-                StartCoroutine(_Move());
-            }
+            Moving = true;
+            StartCoroutine(_Move());
         }
     }
 
