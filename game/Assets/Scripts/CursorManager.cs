@@ -44,44 +44,14 @@ public class CursorManager : MonoBehaviour
             {
                 Vector3 direction = Vector3.zero;
 
-                //If the A button is pressed
-                if (Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
-                {
-                    //direction is diagonal
-                    #region Define a diagonal
-                    //Upright
-                    if (stick[0] >= 0 && stick[1] >= 0)
-                    {
-                        direction = new Vector3(1, 0.585f);
-                    }
-                    //Upleft
-                    else if (stick[0] < 0 && stick[1] > 0)
-                    {
-                        direction = new Vector3(-1, 0.585f);
-                    }
-                    //Downright
-                    else if (stick[0] >= 0 && stick[1] <= 0)
-                    {
-                        direction = new Vector3(1, -0.585f);
-                    }
-                    //Downleft
-                    else if (stick[0] < 0 && stick[1] < 0)
-                    {
-                        direction = new Vector3(-1, -0.585f);
-                    }
-                    #endregion
-                }
-                else
-                {
-                    //direction is omnidirectional
-                    direction = new Vector2(stick[0], stick[1]);
+                //direction is omnidirectional
+                direction = new Vector2(stick[0], stick[1]);
                     
-                    //Up the speed a little
-                    if (mod < 1)
-                    {
-                        mod += Time.deltaTime;
-                    }
-                }
+                //Up the speed a little
+                if (mod < 1)
+                {
+                    mod += Time.deltaTime;
+                }               
 
                 //Move
                 transform.Translate(direction * MaxSpeed * mod * Time.deltaTime, Space.Self);

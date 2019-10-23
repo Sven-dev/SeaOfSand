@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class Block : MonoBehaviour {
 
+    private MeshRenderer Mesh;
+    private Collider Collider;
+    private GameObject Colliders;
+
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+    {
+        Mesh = GetComponent<MeshRenderer>();
+        Collider = GetComponent<Collider>();
+        Colliders = transform.GetChild(1).gameObject;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    /// <summary>
+    /// Turns the block on or off, and toggles the collision
+    /// </summary>
+    public void Toggle()
+    {
+        Mesh.enabled = !Mesh.enabled;
+        Collider.enabled = !Collider.enabled;
+        Colliders.SetActive(Mesh.enabled);
+    }
 }

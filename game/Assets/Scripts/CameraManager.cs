@@ -36,8 +36,8 @@ public class CameraManager : MonoBehaviour
             }
             else
             {
-                Vector3 direction = new Vector3(stick[0], 0, stick[1]);
-                transform.Translate( direction * Speed * Time.deltaTime, Space.Self);
+                Vector3 direction = new Vector3(stick[0], stick[1], 0);
+                transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
             }
 
             yield return null;

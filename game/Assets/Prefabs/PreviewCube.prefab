@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4540798231981328}
   - component: {fileID: 33171608146593344}
   - component: {fileID: 23235576527208812}
-  - component: {fileID: 114307397725973160}
   m_Layer: 0
   m_Name: PreviewCube
   m_TagString: Untagged
@@ -168,14 +167,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114307397725973160
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1193705814772536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed3942b3741b1ed468c55b89038ade18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
