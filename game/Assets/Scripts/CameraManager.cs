@@ -11,17 +11,15 @@ public class CameraManager : MonoBehaviour
 	void Start ()
     {
         Moving = false;
+
+        Joycons.OnRightStick += Move;
 	}
 
-    private void Update()
+    private void Move()
     {
-        float[] stick = Joycons.Right.GetStick();
-        if (Mathf.Abs(stick[0]) > 0.2f || Mathf.Abs(stick[1]) > 0.2f)
+        if (!Moving)
         {
-            if (!Moving)
-            {
-                StartCoroutine(_Move());
-            }
+            StartCoroutine(_Move());
         }
     }
 

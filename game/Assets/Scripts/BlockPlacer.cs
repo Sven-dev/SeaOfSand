@@ -5,73 +5,139 @@ using UnityEngine.UI;
 
 public class BlockPlacer : MonoBehaviour
 {
+    public GameObject PreviewPrefab;
     public Block Prefab;
 
+    public bool Previewing;
+
     private float Yaxis;
+    private Vector3 Rotation;
     private List<List<Block>> UndoList;
 
     private void Start()
     {
+        Rotation = Vector3.zero;
         UndoList = new List<List<Block>>();
+
+        Joycons.OnA += Place;
+        Joycons.OnB += Undo;
+        Joycons.OnY += Rotate;
+
+        Previewing = true;
+        Preview();
     }
 
-    // Update is called once per frame
-    void Update ()
+    /// <summary>
+    /// Checks through raycast where the cub would be placed
+    /// </summary>
+    private void Preview()
     {
-        //If the a button is pressed
-		if (Joycons.Right.GetButtonDown(Joycon.Button.DPAD_RIGHT))
+        StartCoroutine(_Preview());
+    }
+
+    IEnumerator _Preview()
+    {
+        Transform Preview = null;
+        while(Previewing)
         {
-            //Raycast
+            if (!Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                {
+                    //Check if a block is hit
+                    if (hit.collider.tag == "CubeEdge")
+                    {
+                        //Move the preview
+                        if (Preview != null)
+                        {
+                            Preview.position = hit.transform.position;
+                        }
+                        //Instantiate the preview
+                        else
+                        {
+                            Preview = Instantiate(PreviewPrefab, hit.transform.position, Quaternion.Euler(Rotation)).transform;
+                        }
+                    }
+                }
+
+                if (Preview != null)
+                {
+                    Preview.rotation = Quaternion.Euler(Rotation);
+                }
+            }
+            else if (Preview != null)
+            {
+                Destroy(Preview.gameObject);
+            }
+
+            yield return null;
+        }
+
+        Rotation = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Places a block if the button is being held, as long as its on the same y-axis as the first placed block
+    /// </summary>
+    private void Place()
+    {
+        //Raycast
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        {
+            //Check if a block is hit
+            if (hit.collider.tag == "CubeEdge")
+            {
+                //Make a new list of blocks to remove
+                List<Block> blocks = new List<Block>();
+                UndoList.Add(blocks);
+
+                //Place a new block
+                Block b = InstantiateBlock(hit.transform.position);
+
+                //Make sure new blocks can only get placed at the same y-axis
+                Yaxis = b.transform.position.y;
+
+                //Place cursor on top of the placed cube
+                Transform grabber = b.transform.GetChild(0);
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(grabber.position);
+                screenPos.z = 0;
+                RectTransform rect = GetComponent<RectTransform>();
+                rect.anchoredPosition = screenPos;
+
+                //Start multiplace
+                StartCoroutine(_Place());
+            }
+        }
+    }
+
+    IEnumerator _Place()
+    {
+        yield return new WaitForSeconds(0.25f);
+        while (Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
+        {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
             {
-                //Check if a block is hit
-                if (hit.collider.tag == "CubeEdge")
+                if (hit.collider.tag == "CubeEdge" && hit.collider.transform.position.y == Yaxis)
                 {
-                    //Make a new list of blocks to remove
-                    List<Block> blocks = new List<Block>();
-                    UndoList.Add(blocks);
-
-                    //Place a new block
-                    Block b = PlaceBlock(hit.collider.transform.position);
-
-                    //Make sure new blocks can only get placed at the same y-axis
-                    Yaxis = b.transform.position.y;
-
-                    //Place cursor on top of the placed cube
-                    Transform grabber = b.transform.GetChild(0);   
-                    Vector3 screenPos = Camera.main.WorldToScreenPoint(grabber.position);
-                    screenPos.z = 0;
-                    RectTransform rect = GetComponent<RectTransform>();
-                    rect.anchoredPosition = screenPos;
-
-                    //Start multiplace
-                    StartCoroutine(_Place());
+                    InstantiateBlock(hit.transform.position);
                 }
-            }         
+            }
+
+            yield return null;
         }
 
-        //Undo the last action if the B button is pressed & a isn't
-        else if (Joycons.Right.GetButtonDown(Joycon.Button.DPAD_DOWN) && !Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
-        {
-            Undo();
-        }
+        Yaxis = -1;
     }
 
-    //Remove the contents of the last action (list)
+    /// <summary>
+    /// Remove the contents of the last action (list)
+    /// </summary>
     private void Undo()
     {
         StartCoroutine(_Undo());
-    }
-
-    private Block PlaceBlock(Vector3 position)
-    {
-        Block b = Instantiate(Prefab, position, Quaternion.identity);
-        UndoList[UndoList.Count-1].Add(b);
-
-        Joycons.Left.SetRumble(160, 320, 0.25f, 50);
-        Joycons.Right.SetRumble(160, 320, 0.25f, 50);
-        return b;
     }
 
     IEnumerator _Undo()
@@ -112,26 +178,30 @@ public class BlockPlacer : MonoBehaviour
         }
     }
 
-    IEnumerator _Place()
+    private Block InstantiateBlock(Vector3 position)
     {
-        yield return new WaitForSeconds(0.25f);
-        while (Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
+        Block b = Instantiate(Prefab, position, Quaternion.Euler(Rotation));
+        UndoList[UndoList.Count-1].Add(b);
+
+        Joycons.Left.SetRumble(160, 320, 0.25f, 50);
+        Joycons.Right.SetRumble(160, 320, 0.25f, 50);
+        return b;
+    }
+
+    private void Rotate()
+    {
+        StartCoroutine(_Rotate());
+    }
+
+    IEnumerator _Rotate()
+    {
+        Rotation -= Vector3.up * 90;
+        yield return new WaitForSeconds(0.66f);
+
+        while(Joycons.Right.GetButton(Joycon.Button.DPAD_LEFT))
         {
-            if (Joycons.Right.GetButtonDown(Joycon.Button.DPAD_DOWN))
-            {
-                print(UndoList[UndoList.Count - 1][0].name);
-            }
-
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
-            {
-                if (hit.collider.tag == "CubeEdge" && hit.collider.transform.position.y == Yaxis)
-                {
-                    PlaceBlock(hit.collider.transform.position);
-                }
-            }
-
-            yield return null;
+            Rotation -= Vector3.up * 90;
+            yield return new WaitForSeconds(0.2f);
         }
     }
 }
