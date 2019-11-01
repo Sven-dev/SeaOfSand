@@ -9,11 +9,23 @@ public class CameraRotator : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        Joycons.OnY += Rotate;
-	}
+        Joycons.OnLeftTrigger += RotateLeft;
+        Joycons.OnRightTrigger += RotateRight;
+    }
 
-    private void Rotate()
+    private void RotateLeft()
     {
-        transform.Rotate(Vector3.up * 90);
+        if (!Joycons.A)
+        {
+            transform.Rotate(Vector3.up * 90);
+        }
+    }
+
+    private void RotateRight()
+    {
+        if (!Joycons.A)
+        {
+            transform.Rotate(Vector3.up * -90);
+        }
     }
 }

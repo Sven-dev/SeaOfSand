@@ -15,32 +15,22 @@ public class CameraManager : MonoBehaviour
         Joycons.OnRightStick += Move;
 	}
 
-    private void Move()
+    public void Move(string axis, float value)
     {
-        if (!Moving)
+        Vector2 direction;
+        if (axis == "X")
         {
-            StartCoroutine(_Move());
+            direction = Vector2.right * value;
         }
-    }
-
-    IEnumerator _Move()
-    {
-        Moving = true;
-        while (Moving)
+        else if (axis == "Y")
         {
-            //Check if the stick is still tilted
-            float[] stick = Joycons.Right.GetStick();
-            if (Mathf.Abs(stick[0]) < 0.2f && Mathf.Abs(stick[1]) < 0.2f)
-            {
-                Moving = false;
-            }
-            else
-            {
-                Vector3 direction = new Vector3(stick[0], stick[1], 0);
-                transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
-            }
-
-            yield return null;
+            direction = Vector2.up * value;
         }
+        else
+        {
+            throw new System.Exception("Unknown axis");
+        }
+
+        transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
     }
 }

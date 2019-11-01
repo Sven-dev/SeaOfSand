@@ -44,8 +44,7 @@ public class BlockGrabber : MonoBehaviour {
     IEnumerator _Preview()
     {
         Transform Preview = null;
-
-        while (Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
+        while (Joycons.A)
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
@@ -66,12 +65,12 @@ public class BlockGrabber : MonoBehaviour {
                 }
             }
 
-            if (Joycons.Right.GetButtonDown(Joycon.Button.SHOULDER_2))
+            if (Joycons.LeftBumper)
             {
                 Rotation -= Vector3.up * 90;
                 Preview.rotation = Quaternion.Euler(Rotation);
             }
-            else if (Joycons.Right.GetButtonDown(Joycon.Button.SHOULDER_2))
+            else if (Joycons.RightBumper)
             {
                 Rotation += Vector3.up * 90;
                 Preview.rotation = Quaternion.Euler(Rotation);

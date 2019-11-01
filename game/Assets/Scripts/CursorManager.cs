@@ -4,62 +4,38 @@ using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
-    public float MaxSpeed;
+    public float Speed;
     public CameraZoomer CameraZoom;
+    public CameraManager CameraManager;
 
-    private bool Moving;
     private RectTransform rect;
 
     // Use this for initialization
     void Start ()
     {
-        Moving = false;
         rect = GetComponent<RectTransform>();
 
         Joycons.OnLeftStick += Move;
     }
 
-    private void Move()
+    private void Move(string axis, float value)
     {
-        if (!Moving)
+        Vector2 direction;
+        if (axis == "X")
         {
-            Moving = true;
-            StartCoroutine(_Move());
+            direction = Vector2.right * value;
         }
-    }
-
-    IEnumerator _Move()
-    {
-        //Mod makes the cursor start of slower the more the camera is zoomed out for precise movement
-        float mod = 0.1f * (10 - (CameraZoom.Zoom - 2));
-        while (Moving)
+        else if (axis == "Y")
         {
-            //Check if the stick is still tilted
-            float[] stick = Joycons.Left.GetStick();
-            if (Mathf.Abs(stick[0]) < 0.2f && Mathf.Abs(stick[1]) < 0.2f)
-            {
-                Moving = false;
-            }
-            else
-            {
-                Vector3 direction = Vector3.zero;
-
-                //direction is omnidirectional
-                direction = new Vector2(stick[0], stick[1]);
-                    
-                //Up the speed a little
-                if (mod < 1)
-                {
-                    mod += Time.deltaTime;
-                }               
-
-                //Move
-                transform.Translate(direction * MaxSpeed * mod * Time.deltaTime, Space.Self);
-                Clamp();
-            }
-
-            yield return null;
+            direction = Vector2.up * value;
         }
+        else
+        {
+            throw new System.Exception("Unknown axis");
+        }
+
+        transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
+        Clamp();
     }
 
     /// <summary>
@@ -69,6 +45,24 @@ public class CursorManager : MonoBehaviour
     {
         float x = Mathf.Clamp(rect.anchoredPosition.x, 0, Screen.width);
         float y = Mathf.Clamp(rect.anchoredPosition.y, 0, Screen.height);
+        
+        if (rect.anchoredPosition.x > Screen.width - 5)
+        {
+            CameraManager.Move("X", 1);
+        }
+        else if (rect.anchoredPosition.x < 5)
+        {
+            CameraManager.Move("X", -1);
+        }
+
+        if (rect.anchoredPosition.y > Screen.height - 5)
+        {
+            CameraManager.Move("Y", 1);
+        }
+        else if (rect.anchoredPosition.y < 5)
+        {
+            CameraManager.Move("Y", -1);
+        }
 
         rect.anchoredPosition = new Vector2(x, y);
     }

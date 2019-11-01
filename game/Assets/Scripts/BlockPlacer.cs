@@ -144,7 +144,7 @@ public class BlockPlacer : MonoBehaviour
     {
         float timer = 0f;
         int SlowTimes = 3;
-        while(Joycons.Right.GetButton(Joycon.Button.DPAD_DOWN))
+        while(Joycons.B)
         {
             if (timer > 0)
             {

@@ -14,7 +14,7 @@ public class Joycons : MonoBehaviour
 
     #region Events
     //Sticks
-    public delegate void OnStick();
+    public delegate void OnStick(string axis, float value);
     public static OnStick OnLeftStick;
     public static OnStick OnRightStick;
 
@@ -42,185 +42,559 @@ public class Joycons : MonoBehaviour
     //Bumpers
     public static OnButton OnLeftBumper;
     public static OnButton OnRightBumper;
+    #endregion
 
+    #region States
+    //Buttons
+    public static bool A;
+    public static bool B;
+    public static bool Y;
+    public static bool X;
+
+    //D-pad
+    public static bool DRight;
+    public static bool DDown;
+    public static bool DLeft;
+    public static bool DUp;
+
+    //+/-
+    public static bool Plus;
+    public static bool Minus;
+
+    //Triggers
+    public static bool LeftTrigger;
+    public static bool RightTrigger;
+
+    //Bumpers
+    public static bool LeftBumper;
+    public static bool RightBumper;
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         List<Joycon> Joycons = JoyconManager.Instance.j;
-        Left = Joycons[0];
-        Right = Joycons[1];
+        if (Joycons.Count >= 2)
+        {
+            Left = Joycons[0];
+            Right = Joycons[1];
 
-        if (Joycons.Count < 2)
-        {
-            throw new Exception("JoyconMissingException: One or more joycons are missing");
+            StartCoroutine(_JoyconUpdate());
         }
-        else if (Joycons.Count > 2)
+        else
         {
-            print("There are more than 2 Joycons connected, using the first 2");
+            
+            StartCoroutine(_KeyboardUpdate());
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator _JoyconUpdate()
     {
-        #region Triggers & bumpers
-        //Triggers
-        if (Left.GetButtonDown(Joycon.Button.SHOULDER_2))
+        while (true)
         {
-            print("Left Trigger");
-            if (OnLeftTrigger != null)
+            #region Triggers & bumpers
+            //Triggers
+            if (Left.GetButtonDown(Joycon.Button.SHOULDER_2))
             {
-                OnLeftTrigger();
-            }
-        }
+                print("Left Trigger");
+                LeftTrigger = true;
 
-        if (Right.GetButtonDown(Joycon.Button.SHOULDER_2))
-        {
-            print("Right Trigger");
-            if (OnRightTrigger != null)
+                if (OnLeftTrigger != null)
+                {
+                    OnLeftTrigger();
+                }
+            }
+            else if (Left.GetButtonUp(Joycon.Button.SHOULDER_2))
             {
-                OnRightTrigger();
+                LeftTrigger = false;
             }
-        }
 
-        //Bumpers
-        if (Left.GetButtonDown(Joycon.Button.SHOULDER_1))
-        {
-            print("Left Bumper");
-            if (OnLeftBumper != null)
+            if (Right.GetButtonDown(Joycon.Button.SHOULDER_2))
             {
-                OnLeftBumper();
-            }
-        }
+                print("Right Trigger");
+                RightTrigger = true;
 
-        if (Right.GetButtonDown(Joycon.Button.SHOULDER_1))
-        {
-            print("Right Bumper");
-            if (OnRightBumper != null)
+                if (OnRightTrigger != null)
+                {
+                    OnRightTrigger();
+                }
+            }
+            else if (Right.GetButtonUp(Joycon.Button.SHOULDER_2))
             {
-                OnRightBumper();
+                RightTrigger = false;
             }
-        }
-        #endregion
 
-        #region D-pad & ABYX buttons
-        //D-pad
-        if (Left.GetButtonDown(Joycon.Button.DPAD_RIGHT))
-        {
-            print("D-pad right");
-            if (OnDRight != null)
+            //Bumpers
+            if (Left.GetButtonDown(Joycon.Button.SHOULDER_1))
             {
-                OnDRight();
-            }
-        }
+                print("Left Bumper");
+                LeftBumper = true;
 
-        if (Left.GetButtonDown(Joycon.Button.DPAD_DOWN))
-        {
-            print("D-pad down");
-            if (OnDDown != null)
+                if (OnLeftBumper != null)
+                {
+                    OnLeftBumper();
+                }
+            }
+            else if (Left.GetButtonUp(Joycon.Button.SHOULDER_1))
             {
-                OnDDown();
+                LeftBumper = false;
             }
-        }
 
-        if (Left.GetButtonDown(Joycon.Button.DPAD_LEFT))
-        {
-            print("D-pad left");
-            if (OnDLeft != null)
+            if (Right.GetButtonDown(Joycon.Button.SHOULDER_1))
             {
-                OnDLeft();
-            }
-        }
+                print("Right Bumper");
+                RightBumper = true;
 
-        if (Left.GetButtonDown(Joycon.Button.DPAD_UP))
-        {
-            print("D-pad up");
-            if (OnDUp != null)
+                if (OnRightBumper != null)
+                {
+                    OnRightBumper();
+                }
+            }
+            else if (Right.GetButtonUp(Joycon.Button.SHOULDER_1))
             {
-                OnDUp();
+                RightBumper = false;
             }
-        }
+            #endregion
 
-        //ABYX
-        if (Right.GetButtonDown(Joycon.Button.DPAD_RIGHT))
-        {
-            print("A");
-            if (OnA != null)
+            #region D-pad & ABYX buttons
+            //D-pad
+            if (Left.GetButtonDown(Joycon.Button.DPAD_RIGHT))
             {
-                OnA();
-            }
-        }
+                print("D-pad right");
+                DRight = true;
 
-        if (Right.GetButtonDown(Joycon.Button.DPAD_DOWN))
-        {
-            print("B");
-            if (OnB != null)
+                if (OnDRight != null)
+                {
+                    OnDRight();
+                }
+            }
+            else if (Left.GetButtonUp(Joycon.Button.DPAD_RIGHT))
             {
-                OnB();
+                DRight = false;
             }
-        }
 
-        if (Right.GetButtonDown(Joycon.Button.DPAD_LEFT))
-        {
-            print("Y");
-            if (OnY != null)
+            if (Left.GetButtonDown(Joycon.Button.DPAD_DOWN))
             {
-                OnY();
-            }
-        }
+                print("D-pad down");
+                DDown = true;
 
-        if (Right.GetButtonDown(Joycon.Button.DPAD_UP))
-        {
-            print("X");
-            if (OnX != null)
+                if (OnDDown != null)
+                {
+                    OnDDown();
+                }
+            }
+            else if (Left.GetButtonUp(Joycon.Button.DPAD_DOWN))
             {
-                OnX();
+                DDown = false;
             }
-        }
-        #endregion
 
-        #region Plus & Minus
-        //Minus
-        if (Left.GetButtonDown(Joycon.Button.MINUS))
-        {
-            print("Minus");
-            if (OnMinus != null)
+            if (Left.GetButtonDown(Joycon.Button.DPAD_LEFT))
             {
-                OnMinus();
-            }
-        }
+                print("D-pad left");
+                DLeft = true;
 
-        //Plus
-        if (Right.GetButtonDown(Joycon.Button.PLUS))
-        {
-            print("Plus");
-            if (OnPlus != null)
+                if (OnDLeft != null)
+                {
+                    OnDLeft();
+                }
+            }
+            else if (Left.GetButtonUp(Joycon.Button.DPAD_LEFT))
             {
-                OnPlus();
+                DLeft = false;
             }
-        }
-        #endregion
 
-        #region Sticks
-        //Left stick
-        float[] stick = Left.GetStick();
-        //Checks if the stick is getting moved enough
-        if (Mathf.Abs(stick[0]) > StickActivation || Mathf.Abs(stick[1]) > StickActivation)
-        {
-            //Start moving the cursor
-            OnLeftStick();
-        }
+            if (Left.GetButtonDown(Joycon.Button.DPAD_UP))
+            {
+                print("D-pad up");
+                DUp = true;
 
-        //Right stick
-        stick = Right.GetStick();
-        //Checks if the stick is getting moved enough
-        if (Mathf.Abs(stick[0]) > StickActivation || Mathf.Abs(stick[1]) > StickActivation)
-        {
-            //Start moving the camera
-            OnRightStick();
+                if (OnDUp != null)
+                {
+                    OnDUp();
+                }
+            }
+            else if (Left.GetButtonUp(Joycon.Button.DPAD_UP))
+            {
+                DUp = false;
+            }
+
+            //ABYX
+            if (Right.GetButtonDown(Joycon.Button.DPAD_RIGHT))
+            {
+                print("A");
+                A = true;
+
+                if (OnA != null)
+                {
+                    OnA();
+                }
+            }
+            else if (Right.GetButtonUp(Joycon.Button.DPAD_RIGHT))
+            {
+                A = false;
+            }
+
+            if (Right.GetButtonDown(Joycon.Button.DPAD_DOWN))
+            {
+                print("B");
+                B = true;
+
+                if (OnB != null)
+                {
+                    OnB();
+                }
+            }
+            else if (Right.GetButtonUp(Joycon.Button.DPAD_DOWN))
+            {
+                B = false;
+            }
+
+            if (Right.GetButtonDown(Joycon.Button.DPAD_LEFT))
+            {
+                print("Y");
+                Y = true;
+
+                if (OnY != null)
+                {
+                    OnY();
+                }
+            }
+            else if (Right.GetButtonDown(Joycon.Button.DPAD_LEFT))
+            {
+                Y = false;
+            }
+
+            if (Right.GetButtonDown(Joycon.Button.DPAD_UP))
+            {
+                print("X");
+                X = true;
+
+                if (OnX != null)
+                {
+                    OnX();
+                }
+            }
+            else if (Right.GetButtonUp(Joycon.Button.DPAD_UP))
+            {
+                X = false;
+            }
+            #endregion
+
+            #region Plus & Minus
+            //Minus
+            if (Left.GetButtonDown(Joycon.Button.MINUS))
+            {
+                print("Minus");
+                Minus = true;
+
+                if (OnMinus != null)
+                {
+                    OnMinus();
+                }
+            }
+            else if (Left.GetButtonUp(Joycon.Button.MINUS))
+            {
+                Minus = false;
+            }
+
+            //Plus
+            if (Right.GetButtonDown(Joycon.Button.PLUS))
+            {
+                print("Plus");
+                Plus = true;
+
+                if (OnPlus != null)
+                {
+                    OnPlus();
+                }
+            }
+            else if (Right.GetButtonUp(Joycon.Button.PLUS))
+            {
+                Plus = false;
+            }
+            #endregion
+
+            #region Sticks
+            //Left stick
+            float[] stick = Left.GetStick();
+            //Checks if the sticks x-axis is getting moved enough
+            if (Mathf.Abs(stick[0]) > StickActivation)
+            {
+                //Start moving the cursor
+                OnLeftStick("X", stick[0]);
+            }
+            //Checks if the sticks y-axis is getting moved enough
+            if (Mathf.Abs(stick[1]) > StickActivation)
+            {
+                //Start moving the cursor
+                OnLeftStick("Y", stick[1]);
+            }
+
+            //Right stick
+            stick = Right.GetStick();
+            //Checks if the sticks x-axis is getting moved enough
+            if (Mathf.Abs(stick[0]) > StickActivation)
+            {
+                //Start moving the camera
+                OnRightStick("X", stick[0]);
+            }
+            //Checks if the sticks y-axis is getting moved enough
+            if (Mathf.Abs(stick[1]) > StickActivation)
+            {
+                //Start moving the camera
+                OnRightStick("Y", stick[0]);
+            }
+            #endregion
+
+            yield return null;
         }
-        #endregion
+    }
+
+    IEnumerator _KeyboardUpdate()
+    {
+        while (true)
+        {
+            #region Triggers & bumpers
+            //Triggers
+            if (Input.GetKeyDown(KeyCode.Keypad7))
+            {
+                print("Left Trigger");
+                LeftTrigger = true;
+
+                if (OnLeftTrigger != null)
+                {
+                    OnLeftTrigger();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad7))
+            {
+                LeftTrigger = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad9))
+            {
+                print("Right Trigger");
+                RightTrigger = true;
+
+                if (OnRightTrigger != null)
+                {
+                    OnRightTrigger();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad9))
+            {
+                RightTrigger = false;
+            }
+
+            //Bumpers
+            if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                print("Left Bumper");
+                LeftBumper = true;
+
+                if (OnLeftBumper != null)
+                {
+                    OnLeftBumper();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad1))
+            {
+                LeftBumper = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                print("Right Bumper");
+                RightBumper = true;
+
+                if (OnRightBumper != null)
+                {
+                    OnRightBumper();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad3))
+            {
+                RightBumper = false;
+            }
+            #endregion
+
+            #region D-pad & ABYX buttons
+            /*
+            //D-pad
+            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_RIGHT))
+            {
+                print("D-pad right");
+                if (Joycons.OnDRight != null)
+                {
+                    Joycons.OnDRight();
+                }
+            }
+
+            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_DOWN))
+            {
+                print("D-pad down");
+                if (Joycons.OnDDown != null)
+                {
+                    Joycons.OnDDown();
+                }
+            }
+
+            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_LEFT))
+            {
+                print("D-pad left");
+                if (Joycons.OnDLeft != null)
+                {
+                    Joycons.OnDLeft();
+                }
+            }
+
+            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_UP))
+            {
+                print("D-pad up");
+                if (Joycons.OnDUp != null)
+                {
+                    Joycons.OnDUp();
+                }
+            }
+            */
+
+            //ABYX
+            if (Input.GetKeyDown(KeyCode.Keypad6))
+            {
+                print("A");
+                A = true;
+
+                if (OnA != null)
+                {
+                    OnA();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad6))
+            {
+                A = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                print("B");
+                B = true;
+
+                if (OnB != null)
+                {
+                    OnB();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad2))
+            {
+                B = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad4))
+            {
+                print("Y");
+                Y = true;
+
+                if (OnY != null)
+                {
+                    OnY();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad4))
+            {
+                Y = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Keypad8))
+            {
+                print("X");
+                X = true;
+
+                if (OnX != null)
+                {
+                    OnX();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Keypad8))
+            {
+                X = false;
+            }
+            #endregion
+
+            #region Plus & Minus
+            //Minus
+            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            {
+                print("Minus");
+                Minus = true;
+
+                if (OnMinus != null)
+                {
+                    OnMinus();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.KeypadPlus))
+            {
+                Minus = false;
+            }
+
+            //Plus
+            if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                print("Plus");
+                Plus = true;
+
+                if (OnPlus != null)
+                {
+                    OnPlus();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.KeypadMinus))
+            {
+                Plus = false;
+            }
+            #endregion
+
+            #region Sticks
+            //Left stick
+            if (Input.GetKey(KeyCode.D))
+            {
+                OnLeftStick("X", 1);
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                OnLeftStick("X", -1);
+            }
+
+            if (Input.GetKey(KeyCode.S))
+            {
+                OnLeftStick("Y", -1);
+            }
+            else if (Input.GetKey(KeyCode.W))
+            {
+                OnLeftStick("Y", 1);
+            }
+
+            //Right stick
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                OnRightStick("X", 1);
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                OnRightStick("X", -1);
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                OnRightStick("Y", -1);
+            }
+            else if (Input.GetKey(KeyCode.UpArrow))
+            {
+                OnRightStick("Y", 1);
+            }
+            #endregion
+
+            yield return null;
+        }
     }
 }
