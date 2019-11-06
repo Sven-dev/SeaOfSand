@@ -13,12 +13,12 @@ public class BlockPlacer : MonoBehaviour
 
     private float Yaxis;
     private Vector3 Rotation;
-    private List<List<Block>> UndoList;
+
+    private BlockSpawnTracker Tracker;
 
     private void Start()
     {
         Rotation = Vector3.zero;
-        UndoList = new List<List<Block>>();
     }
 
     /// <summary>
@@ -92,7 +92,9 @@ public class BlockPlacer : MonoBehaviour
             {
                 //Make a new list of blocks to remove
                 List<Block> blocks = new List<Block>();
-                UndoList.Add(blocks);
+
+                Tracker = new BlockSpawnTracker();
+                ActionManager.AddAction(Tracker);
 
                 //Place a new block
                 Block b = InstantiateBlock(hit.transform.position);
@@ -134,56 +136,10 @@ public class BlockPlacer : MonoBehaviour
         Yaxis = -1;
     }
 
-    /// <summary>
-    /// Remove the contents of the last action (list)
-    /// </summary>
-    public void Undo()
-    {
-        StartCoroutine(_Undo());
-    }
-
-    IEnumerator _Undo()
-    {
-        float timer = 0f;
-        int SlowTimes = 3;
-        while(Active && Joycons.B)
-        {
-            if (timer > 0)
-            {
-                timer -= Time.deltaTime;
-            }
-            else
-            {
-                //Remove the contents of the last action (list)
-                if (UndoList.Count > 0)
-                {
-                    foreach (Block b in UndoList[UndoList.Count - 1])
-                    {
-                        Destroy(b.gameObject);
-                    }
-
-                    UndoList.RemoveAt(UndoList.Count - 1);
-                }
-
-                if (SlowTimes > 0)
-                {
-                    SlowTimes--;
-                    timer = 0.25f;
-                }
-                else
-                {
-                    timer = 0.1f;
-                }
-            }
-
-            yield return null;
-        }
-    }
-
     private Block InstantiateBlock(Vector3 position)
     {
         Block b = Instantiate(Prefab, position, Quaternion.Euler(Rotation));
-        UndoList[UndoList.Count-1].Add(b);
+        Tracker.Add(b);
 
         //Joycons.Left.SetRumble(160, 320, 0.25f, 50);
         //Joycons.Right.SetRumble(160, 320, 0.25f, 50);

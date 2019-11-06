@@ -21,9 +21,13 @@ public class Block : MonoBehaviour {
     /// </summary>
     public void Toggle()
     {
-        print("here");
         Mesh.enabled = !Mesh.enabled;
         Collider.enabled = !Collider.enabled;
         Colliders.SetActive(Mesh.enabled);
+    }
+
+    public void Destroy()
+    {
+        Destroy(gameObject);
     }
 }

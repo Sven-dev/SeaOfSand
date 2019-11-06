@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Allows the player to grab and let go of blocks
+/// Allows the player to grab and let go of blocks
 public class BlockGrabber : MonoBehaviour
 {
     [HideInInspector]
@@ -24,7 +24,7 @@ public class BlockGrabber : MonoBehaviour
     /// <summary>
     /// Check if there is an object where the cursor is pointing
     /// </summary>
-    public void Check()
+    public void Grab()
     {
         //Raycast on the cursor position
         RaycastHit hit;
@@ -37,14 +37,14 @@ public class BlockGrabber : MonoBehaviour
                 GrabbedBlock = hit.transform.GetComponentInParent<Block>();
                 GrabbedBlock.Toggle();
 
-                StartCoroutine(_Preview());
+                StartCoroutine(_Grab());
             }
         }
 
         Debug.DrawLine(transform.position, transform.TransformDirection(Vector3.forward) * 100, Color.yellow, 3);
     }
 
-    IEnumerator _Preview()
+    IEnumerator _Grab()
     {
         //Instantiate a preview of the block
         Transform Preview = Instantiate(PreviewPrefab, GrabbedBlock.transform.position, Quaternion.Euler(Rotation)).transform;
@@ -76,6 +76,9 @@ public class BlockGrabber : MonoBehaviour
             
             yield return null;
         }
+
+        //Add the action to the actionlist
+        ActionManager.AddAction(new PositionTracker(GrabbedBlock, GrabbedBlock.transform.position));
 
         //Place the grabbed block on the preview position
         GrabbedBlock.transform.position = Preview.position;

@@ -16,7 +16,6 @@ public class Cursor : MonoBehaviour
     void Start ()
     {
         rect = GetComponent<RectTransform>();
-        print("start");
     }
 
     /// <summary>

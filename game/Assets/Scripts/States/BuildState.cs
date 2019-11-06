@@ -10,7 +10,6 @@ public class BuildState : State
     public override void Enable()
     {
         Joycons.OnA += BlockPlacer.Place;
-        Joycons.OnB += BlockPlacer.Undo;
         Joycons.OnY += BlockPlacer.Rotate;
 
         Joycons.OnLeftStick += Cursor.Move;
@@ -22,7 +21,6 @@ public class BuildState : State
     public override void Disable()
     {
         Joycons.OnA -= BlockPlacer.Place;
-        Joycons.OnB -= BlockPlacer.Undo;
         Joycons.OnY -= BlockPlacer.Rotate;
 
         Joycons.OnLeftStick -= Cursor.Move;
