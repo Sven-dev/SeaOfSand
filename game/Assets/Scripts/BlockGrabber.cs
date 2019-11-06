@@ -3,26 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Allows the player to grab and let go of blocks
-public class BlockGrabber : MonoBehaviour {
+public class BlockGrabber : MonoBehaviour
+{
+    [HideInInspector]
+    public bool Active = false;
 
-    public bool Previewing;
     public GameObject PreviewPrefab;
 
-    private Block Grabbed;
-    private Vector3 Rotation;
+    private Block GrabbedBlock;
+    private Vector3 Rotation = Vector3.zero;
 
-    // Use this for initialization
-    void Start ()
+    /// <summary>
+    /// Starts or stops the object
+    /// </summary>
+    public void Toggle()
     {
-        Joycons.OnA += Check;
-
-        Rotation = Vector3.zero;
+        Active = !Active;
     }
 
     /// <summary>
     /// Check if there is an object where the cursor is pointing
     /// </summary>
-    private void Check()
+    public void Check()
     {
         //Raycast on the cursor position
         RaycastHit hit;
@@ -32,20 +34,23 @@ public class BlockGrabber : MonoBehaviour {
             if (hit.collider.tag == "CubeEdge" && hit.transform.parent.parent.tag != "Immovable")
             {
                 //Grab the block
-                Block block = hit.transform.GetComponentInParent<Block>();
-                Grabbed = block;
-                block.Toggle();
+                GrabbedBlock = hit.transform.GetComponentInParent<Block>();
+                GrabbedBlock.Toggle();
 
                 StartCoroutine(_Preview());
             }
         }
+
+        Debug.DrawLine(transform.position, transform.TransformDirection(Vector3.forward) * 100, Color.yellow, 3);
     }
 
     IEnumerator _Preview()
     {
-        Transform Preview = null;
-        while (Joycons.A)
+        //Instantiate a preview of the block
+        Transform Preview = Instantiate(PreviewPrefab, GrabbedBlock.transform.position, Quaternion.Euler(Rotation)).transform;
+        while (Active && Joycons.A)
         {
+            //Raycast on the cursor position
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
             {
@@ -53,18 +58,11 @@ public class BlockGrabber : MonoBehaviour {
                 if (hit.collider.tag == "CubeEdge")
                 {
                     //Move the preview
-                    if (Preview != null)
-                    {
-                        Preview.position = hit.transform.position;
-                    }
-                    //Instantiate the preview
-                    else
-                    {
-                        Preview = Instantiate(PreviewPrefab, hit.transform.position, Quaternion.Euler(Rotation)).transform;
-                    }
+                    Preview.position = hit.transform.position;
                 }
             }
 
+            //Rotate the preview left or right
             if (Joycons.LeftBumper)
             {
                 Rotation -= Vector3.up * 90;
@@ -79,11 +77,14 @@ public class BlockGrabber : MonoBehaviour {
             yield return null;
         }
 
-        //Let go
-        Grabbed.transform.position = Preview.position;
-        Grabbed.Toggle();
-        Grabbed = null;
+        //Place the grabbed block on the preview position
+        GrabbedBlock.transform.position = Preview.position;
+        GrabbedBlock.transform.rotation = Quaternion.Euler(Rotation);
+        GrabbedBlock.Toggle();
+
+        //Destroy the preview and reset the grabber
         Destroy(Preview.gameObject);
+        GrabbedBlock = null;
         Rotation = Vector3.zero;
     }
 }

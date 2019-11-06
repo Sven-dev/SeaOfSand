@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class BlockPlacer : MonoBehaviour
 {
+    [HideInInspector]
+    public bool Active = false;
+
     public GameObject PreviewPrefab;
     public Block Prefab;
-
-    public bool Previewing;
 
     private float Yaxis;
     private Vector3 Rotation;
@@ -18,29 +19,28 @@ public class BlockPlacer : MonoBehaviour
     {
         Rotation = Vector3.zero;
         UndoList = new List<List<Block>>();
-
-        Joycons.OnA += Place;
-        Joycons.OnB += Undo;
-        Joycons.OnY += Rotate;
-
-        Previewing = true;
-        Preview();
     }
 
     /// <summary>
-    /// Checks through raycast where the cub would be placed
+    /// Starts or stops the object
     /// </summary>
-    private void Preview()
+    public void Toggle()
     {
-        StartCoroutine(_Preview());
+        Active = !Active;
+        print(Active);
+
+        if (Active)
+        {
+            StartCoroutine(_Preview());
+        }
     }
 
     IEnumerator _Preview()
-    {
+    {     
         Transform Preview = null;
-        while(Previewing)
+        while (Active)
         {
-            if (!Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
+            if (!Joycons.A)
             {
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
@@ -74,13 +74,14 @@ public class BlockPlacer : MonoBehaviour
             yield return null;
         }
 
+        Destroy(Preview.gameObject);
         Rotation = Vector3.zero;
     }
 
     /// <summary>
     /// Places a block if the button is being held, as long as its on the same y-axis as the first placed block
     /// </summary>
-    private void Place()
+    public void Place()
     {
         //Raycast
         RaycastHit hit;
@@ -115,8 +116,9 @@ public class BlockPlacer : MonoBehaviour
     IEnumerator _Place()
     {
         yield return new WaitForSeconds(0.25f);
-        while (Joycons.Right.GetButton(Joycon.Button.DPAD_RIGHT))
+        while (Active && Joycons.A)
         {
+            print("Placing");
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
             {
@@ -135,7 +137,7 @@ public class BlockPlacer : MonoBehaviour
     /// <summary>
     /// Remove the contents of the last action (list)
     /// </summary>
-    private void Undo()
+    public void Undo()
     {
         StartCoroutine(_Undo());
     }
@@ -144,7 +146,7 @@ public class BlockPlacer : MonoBehaviour
     {
         float timer = 0f;
         int SlowTimes = 3;
-        while(Joycons.B)
+        while(Active && Joycons.B)
         {
             if (timer > 0)
             {
@@ -183,14 +185,14 @@ public class BlockPlacer : MonoBehaviour
         Block b = Instantiate(Prefab, position, Quaternion.Euler(Rotation));
         UndoList[UndoList.Count-1].Add(b);
 
-        Joycons.Left.SetRumble(160, 320, 0.25f, 50);
-        Joycons.Right.SetRumble(160, 320, 0.25f, 50);
+        //Joycons.Left.SetRumble(160, 320, 0.25f, 50);
+        //Joycons.Right.SetRumble(160, 320, 0.25f, 50);
         return b;
     }
 
-    private void Rotate()
+    public void Rotate()
     {
-        StartCoroutine(_Rotate());
+        StartCoroutine(_Rotate());    
     }
 
     IEnumerator _Rotate()
@@ -198,7 +200,7 @@ public class BlockPlacer : MonoBehaviour
         Rotation -= Vector3.up * 90;
         yield return new WaitForSeconds(0.66f);
 
-        while(Joycons.Right.GetButton(Joycon.Button.DPAD_LEFT))
+        while(Active && Joycons.Y)
         {
             Rotation -= Vector3.up * 90;
             yield return new WaitForSeconds(0.2f);

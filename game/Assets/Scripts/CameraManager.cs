@@ -15,22 +15,9 @@ public class CameraManager : MonoBehaviour
         Joycons.OnRightStick += Move;
 	}
 
-    public void Move(string axis, float value)
+    public void Move(float[] stick)
     {
-        Vector2 direction;
-        if (axis == "X")
-        {
-            direction = Vector2.right * value;
-        }
-        else if (axis == "Y")
-        {
-            direction = Vector2.up * value;
-        }
-        else
-        {
-            throw new System.Exception("Unknown axis");
-        }
-
+        Vector2 direction = new Vector2(stick[0], stick[1]);
         transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
     }
 }

@@ -14,12 +14,12 @@ public class Joycons : MonoBehaviour
 
     #region Events
     //Sticks
-    public delegate void OnStick(string axis, float value);
+    public delegate void OnStick(float[] values);
     public static OnStick OnLeftStick;
     public static OnStick OnRightStick;
 
     //Buttons
-    public delegate void OnButton();
+    public delegate void OnButton(); 
     public static OnButton OnA;
     public static OnButton OnB;
     public static OnButton OnY;
@@ -82,8 +82,7 @@ public class Joycons : MonoBehaviour
             StartCoroutine(_JoyconUpdate());
         }
         else
-        {
-            
+        {        
             StartCoroutine(_KeyboardUpdate());
         }
     }
@@ -96,9 +95,7 @@ public class Joycons : MonoBehaviour
             //Triggers
             if (Left.GetButtonDown(Joycon.Button.SHOULDER_2))
             {
-                print("Left Trigger");
                 LeftTrigger = true;
-
                 if (OnLeftTrigger != null)
                 {
                     OnLeftTrigger();
@@ -111,9 +108,7 @@ public class Joycons : MonoBehaviour
 
             if (Right.GetButtonDown(Joycon.Button.SHOULDER_2))
             {
-                print("Right Trigger");
                 RightTrigger = true;
-
                 if (OnRightTrigger != null)
                 {
                     OnRightTrigger();
@@ -127,9 +122,7 @@ public class Joycons : MonoBehaviour
             //Bumpers
             if (Left.GetButtonDown(Joycon.Button.SHOULDER_1))
             {
-                print("Left Bumper");
                 LeftBumper = true;
-
                 if (OnLeftBumper != null)
                 {
                     OnLeftBumper();
@@ -142,9 +135,7 @@ public class Joycons : MonoBehaviour
 
             if (Right.GetButtonDown(Joycon.Button.SHOULDER_1))
             {
-                print("Right Bumper");
                 RightBumper = true;
-
                 if (OnRightBumper != null)
                 {
                     OnRightBumper();
@@ -156,13 +147,11 @@ public class Joycons : MonoBehaviour
             }
             #endregion
 
-            #region D-pad & ABYX buttons
+            #region D-pad
             //D-pad
             if (Left.GetButtonDown(Joycon.Button.DPAD_RIGHT))
             {
-                print("D-pad right");
                 DRight = true;
-
                 if (OnDRight != null)
                 {
                     OnDRight();
@@ -175,9 +164,7 @@ public class Joycons : MonoBehaviour
 
             if (Left.GetButtonDown(Joycon.Button.DPAD_DOWN))
             {
-                print("D-pad down");
                 DDown = true;
-
                 if (OnDDown != null)
                 {
                     OnDDown();
@@ -190,9 +177,7 @@ public class Joycons : MonoBehaviour
 
             if (Left.GetButtonDown(Joycon.Button.DPAD_LEFT))
             {
-                print("D-pad left");
                 DLeft = true;
-
                 if (OnDLeft != null)
                 {
                     OnDLeft();
@@ -205,9 +190,7 @@ public class Joycons : MonoBehaviour
 
             if (Left.GetButtonDown(Joycon.Button.DPAD_UP))
             {
-                print("D-pad up");
                 DUp = true;
-
                 if (OnDUp != null)
                 {
                     OnDUp();
@@ -217,13 +200,12 @@ public class Joycons : MonoBehaviour
             {
                 DUp = false;
             }
+            #endregion
 
-            //ABYX
+            #region ABYX
             if (Right.GetButtonDown(Joycon.Button.DPAD_RIGHT))
             {
-                print("A");
                 A = true;
-
                 if (OnA != null)
                 {
                     OnA();
@@ -236,9 +218,7 @@ public class Joycons : MonoBehaviour
 
             if (Right.GetButtonDown(Joycon.Button.DPAD_DOWN))
             {
-                print("B");
                 B = true;
-
                 if (OnB != null)
                 {
                     OnB();
@@ -251,24 +231,20 @@ public class Joycons : MonoBehaviour
 
             if (Right.GetButtonDown(Joycon.Button.DPAD_LEFT))
             {
-                print("Y");
                 Y = true;
-
                 if (OnY != null)
                 {
                     OnY();
                 }
             }
-            else if (Right.GetButtonDown(Joycon.Button.DPAD_LEFT))
+            else if (Right.GetButtonUp(Joycon.Button.DPAD_LEFT))
             {
                 Y = false;
             }
 
             if (Right.GetButtonDown(Joycon.Button.DPAD_UP))
             {
-                print("X");
                 X = true;
-
                 if (OnX != null)
                 {
                     OnX();
@@ -284,9 +260,7 @@ public class Joycons : MonoBehaviour
             //Minus
             if (Left.GetButtonDown(Joycon.Button.MINUS))
             {
-                print("Minus");
                 Minus = true;
-
                 if (OnMinus != null)
                 {
                     OnMinus();
@@ -300,9 +274,7 @@ public class Joycons : MonoBehaviour
             //Plus
             if (Right.GetButtonDown(Joycon.Button.PLUS))
             {
-                print("Plus");
                 Plus = true;
-
                 if (OnPlus != null)
                 {
                     OnPlus();
@@ -317,32 +289,20 @@ public class Joycons : MonoBehaviour
             #region Sticks
             //Left stick
             float[] stick = Left.GetStick();
-            //Checks if the sticks x-axis is getting moved enough
-            if (Mathf.Abs(stick[0]) > StickActivation)
+            //Checks if the sticks axis are getting moved enough
+            if (Mathf.Abs(stick[0]) > StickActivation || Mathf.Abs(stick[1]) > StickActivation)
             {
                 //Start moving the cursor
-                OnLeftStick("X", stick[0]);
-            }
-            //Checks if the sticks y-axis is getting moved enough
-            if (Mathf.Abs(stick[1]) > StickActivation)
-            {
-                //Start moving the cursor
-                OnLeftStick("Y", stick[1]);
+                OnLeftStick(stick);
             }
 
             //Right stick
             stick = Right.GetStick();
             //Checks if the sticks x-axis is getting moved enough
-            if (Mathf.Abs(stick[0]) > StickActivation)
+            if (Mathf.Abs(stick[0]) > StickActivation || Mathf.Abs(stick[1]) > StickActivation)
             {
                 //Start moving the camera
-                OnRightStick("X", stick[0]);
-            }
-            //Checks if the sticks y-axis is getting moved enough
-            if (Mathf.Abs(stick[1]) > StickActivation)
-            {
-                //Start moving the camera
-                OnRightStick("Y", stick[0]);
+                OnRightStick(stick);
             }
             #endregion
 
@@ -358,9 +318,7 @@ public class Joycons : MonoBehaviour
             //Triggers
             if (Input.GetKeyDown(KeyCode.Keypad7))
             {
-                print("Left Trigger");
                 LeftTrigger = true;
-
                 if (OnLeftTrigger != null)
                 {
                     OnLeftTrigger();
@@ -373,9 +331,7 @@ public class Joycons : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Keypad9))
             {
-                print("Right Trigger");
                 RightTrigger = true;
-
                 if (OnRightTrigger != null)
                 {
                     OnRightTrigger();
@@ -389,9 +345,7 @@ public class Joycons : MonoBehaviour
             //Bumpers
             if (Input.GetKeyDown(KeyCode.Keypad1))
             {
-                print("Left Bumper");
                 LeftBumper = true;
-
                 if (OnLeftBumper != null)
                 {
                     OnLeftBumper();
@@ -404,9 +358,7 @@ public class Joycons : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Keypad3))
             {
-                print("Right Bumper");
                 RightBumper = true;
-
                 if (OnRightBumper != null)
                 {
                     OnRightBumper();
@@ -418,52 +370,64 @@ public class Joycons : MonoBehaviour
             }
             #endregion
 
-            #region D-pad & ABYX buttons
-            /*
-            //D-pad
-            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_RIGHT))
+            #region D-pad
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                print("D-pad right");
-                if (Joycons.OnDRight != null)
+                DRight = true;
+                if (OnDRight != null)
                 {
-                    Joycons.OnDRight();
-                }
+                    OnDRight();
+                }            
+            }
+            else if (Input.GetKeyUp(KeyCode.Alpha1))
+            {
+                DRight = false;
             }
 
-            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_DOWN))
+            if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                print("D-pad down");
-                if (Joycons.OnDDown != null)
+                DDown = true;
+                if (OnDDown != null)
                 {
-                    Joycons.OnDDown();
+                    OnDDown();
                 }
             }
-
-            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_LEFT))
+            else if (Input.GetKeyUp(KeyCode.Alpha2))
             {
-                print("D-pad left");
-                if (Joycons.OnDLeft != null)
-                {
-                    Joycons.OnDLeft();
-                }
+                DDown = false;
             }
 
-            if (Joycons.Left.GetButtonDown(Joycon.Button.DPAD_UP))
+            if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                print("D-pad up");
-                if (Joycons.OnDUp != null)
+                DLeft = true;
+                if (OnDLeft != null)
                 {
-                    Joycons.OnDUp();
+                    OnDLeft();
                 }
             }
-            */
+            else if (Input.GetKeyUp(KeyCode.Alpha3))
+            {
+                DLeft = false;
+            }
 
-            //ABYX
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                DUp = true;
+                if (OnDUp != null)
+                {
+                    OnDUp();
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Alpha4))
+            {
+                DUp = false;
+            }
+            #endregion
+
+            #region ABYX
             if (Input.GetKeyDown(KeyCode.Keypad6))
             {
-                print("A");
                 A = true;
-
                 if (OnA != null)
                 {
                     OnA();
@@ -476,9 +440,7 @@ public class Joycons : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Keypad2))
             {
-                print("B");
                 B = true;
-
                 if (OnB != null)
                 {
                     OnB();
@@ -491,9 +453,7 @@ public class Joycons : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Keypad4))
             {
-                print("Y");
                 Y = true;
-
                 if (OnY != null)
                 {
                     OnY();
@@ -506,9 +466,7 @@ public class Joycons : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Keypad8))
             {
-                print("X");
                 X = true;
-
                 if (OnX != null)
                 {
                     OnX();
@@ -524,9 +482,7 @@ public class Joycons : MonoBehaviour
             //Minus
             if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
-                print("Minus");
                 Minus = true;
-
                 if (OnMinus != null)
                 {
                     OnMinus();
@@ -540,9 +496,7 @@ public class Joycons : MonoBehaviour
             //Plus
             if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
-                print("Plus");
                 Plus = true;
-
                 if (OnPlus != null)
                 {
                     OnPlus();
@@ -555,42 +509,54 @@ public class Joycons : MonoBehaviour
             #endregion
 
             #region Sticks
+            float[] stick = new float[] {0,0};
+
             //Left stick
             if (Input.GetKey(KeyCode.D))
             {
-                OnLeftStick("X", 1);
+                stick[0] += 1;
             }
-            else if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A))
             {
-                OnLeftStick("X", -1);
+                stick[0] -= 1;
             }
-
+            if (Input.GetKey(KeyCode.W))
+            {
+                stick[1] += 1;
+            }
             if (Input.GetKey(KeyCode.S))
             {
-                OnLeftStick("Y", -1);
+                stick[1] -= 1;
             }
-            else if (Input.GetKey(KeyCode.W))
+            
+            //Trigger when any key is pressed
+            if (stick[0] != 0 || stick[1] != 0)
             {
-                OnLeftStick("Y", 1);
+                OnLeftStick(stick);
             }
 
             //Right stick
             if (Input.GetKey(KeyCode.RightArrow))
             {
-                OnRightStick("X", 1);
+                stick[0] += 1;
             }
-            else if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow))
             {
-                OnRightStick("X", -1);
+                stick[0] -= 1;
             }
-
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                stick[1] += 1;
+            }
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                OnRightStick("Y", -1);
+                stick[1] -= 1;
             }
-            else if (Input.GetKey(KeyCode.UpArrow))
+
+            //Trigger when any key is pressed
+            if (stick[0] != 0 || stick[1] != 0)
             {
-                OnRightStick("Y", 1);
+                OnRightStick(stick);
             }
             #endregion
 
