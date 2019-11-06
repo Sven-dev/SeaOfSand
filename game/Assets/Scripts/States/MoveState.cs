@@ -5,10 +5,12 @@ using UnityEngine;
 public class MoveState : State
 {
     public BlockGrabber BlockGrabber;
+    public Cursor Cursor;
 
     public override void Enable()
     {
         Joycons.OnA += BlockGrabber.Check;
+        Joycons.OnLeftStick += Cursor.Move;
 
         BlockGrabber.Toggle();
         base.Enable();
@@ -17,6 +19,7 @@ public class MoveState : State
     public override void Disable()
     {
         Joycons.OnA -= BlockGrabber.Check;
+        Joycons.OnLeftStick -= Cursor.Move;
 
         BlockGrabber.Toggle();
         base.Disable();

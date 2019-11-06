@@ -2,22 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DiagonalCursor : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    private void Move(float[] stick)
+/// <summary>
+/// Moves omnidirectionally normally, but only diagonally when the a button is pressed
+/// </summary>
+public class DiagonalCursor : Cursor
+{
+    public override void Move(float[] stick)
     {
         if (Joycons.A)
         {
+            float mod = 0.5f;
             Vector2 direction = Vector2.zero;
 
             #region Define a diagonal
@@ -42,6 +36,13 @@ public class DiagonalCursor : MonoBehaviour {
                 direction = new Vector3(-1, -0.585f);
             }
             #endregion
+
+            transform.Translate(direction * (Speed * mod) * Time.deltaTime, Space.Self);
+            Clamp(stick);
+        }
+        else
+        {
+            base.Move(stick);
         }
     }
 }
