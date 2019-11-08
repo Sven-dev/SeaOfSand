@@ -90,9 +90,7 @@ public class BlockPlacer : MonoBehaviour
             //Check if a block is hit
             if (hit.collider.tag == "CubeEdge")
             {
-                //Make a new list of blocks to remove
-                List<Block> blocks = new List<Block>();
-
+                //Track the blocks being placed
                 Tracker = new BlockSpawnTracker();
                 ActionManager.AddAction(Tracker);
 

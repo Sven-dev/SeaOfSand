@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class State : MonoBehaviour
 {
+    [Tooltip("Doesn't do anything in code, just shows what state is active")]
     public bool Active;
 
     /// <summary>

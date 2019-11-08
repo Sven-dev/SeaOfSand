@@ -21,8 +21,6 @@ public class BlockSpawnTracker : Action
                 block.Destroy();
                 Blocks.Remove(block);
             }
-
-            Blocks.Remove(block);
         }
 
         return true;

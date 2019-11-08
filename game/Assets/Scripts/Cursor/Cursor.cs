@@ -24,10 +24,8 @@ public class Cursor : MonoBehaviour
     /// <param name="stick">Values of the x and y axis of the left joystick</param>
     public virtual void Move(float[] stick)
     {
-        float mod = 1;
         Vector2 direction = new Vector2(stick[0], stick[1]);
-        
-        transform.Translate(direction * (Speed * mod) * Time.deltaTime, Space.Self);
+        transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
         Clamp(stick);
     }
 

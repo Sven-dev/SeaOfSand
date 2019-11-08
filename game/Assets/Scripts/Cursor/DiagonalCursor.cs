@@ -11,7 +11,6 @@ public class DiagonalCursor : Cursor
     {
         if (Joycons.A)
         {
-            float mod = 0.5f;
             Vector2 direction = Vector2.zero;
 
             #region Define a diagonal
@@ -37,7 +36,7 @@ public class DiagonalCursor : Cursor
             }
             #endregion
 
-            transform.Translate(direction * (Speed * mod) * Time.deltaTime, Space.Self);
+            transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
             Clamp(stick);
         }
         else
