@@ -26,6 +26,11 @@ public class Block : MonoBehaviour {
         Colliders.SetActive(Mesh.enabled);
     }
 
+    public void Paint(Material newcolour)
+    {
+        Mesh.material = new Material(newcolour);
+    }
+
     public void Destroy()
     {
         Destroy(gameObject);
