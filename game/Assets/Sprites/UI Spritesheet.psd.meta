@@ -17,6 +17,7 @@ TextureImporter:
     21300024: UI Spritesheet_12
     21300026: UI Spritesheet_13
     21300028: UI Spritesheet_14
+    21300030: UI Spritesheet_15
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -104,72 +105,30 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: UI Spritesheet_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 225
-        width: 175
-        height: 175
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 160, y: 10, z: 10, w: 160}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_1
-      rect:
-        serializedVersion: 2
-        x: 180
-        y: 225
-        width: 175
-        height: 175
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 160, y: 10, z: 10, w: 160}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 45
-        width: 175
-        height: 175
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 160, y: 10, z: 10, w: 160}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_3
-      rect:
-        serializedVersion: 2
-        x: 180
-        y: 45
-        width: 175
-        height: 175
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 160, y: 10, z: 10, w: 160}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
       name: UI Spritesheet_4
       rect:
         serializedVersion: 2
         x: 0
-        y: 25
+        y: 225
         width: 15
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 5, y: 5, z: 5, w: 5}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UI Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 114
+        width: 106
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -178,138 +137,68 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 20
-        y: 25
-        width: 15
-        height: 15
+        y: 230
+        width: 5
+        height: 5
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: UI Spritesheet_6
+      name: UI Spritesheet_0
       rect:
         serializedVersion: 2
-        x: 40
-        y: 25
-        width: 15
-        height: 15
+        x: 0
+        y: 520
+        width: 80
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
+      border: {x: 10, y: 10, z: 65, w: 65}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: UI Spritesheet_7
+      name: UI Spritesheet_1
       rect:
         serializedVersion: 2
-        x: 60
-        y: 25
-        width: 15
-        height: 15
+        x: 85
+        y: 520
+        width: 80
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
+      border: {x: 10, y: 10, z: 65, w: 65}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: UI Spritesheet_8
+      name: UI Spritesheet_2
       rect:
         serializedVersion: 2
-        x: 80
-        y: 25
-        width: 15
-        height: 15
+        x: 0
+        y: 435
+        width: 80
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
+      border: {x: 10, y: 10, z: 65, w: 65}
       outline: []
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: UI Spritesheet_9
+      name: UI Spritesheet_3
       rect:
         serializedVersion: 2
-        x: 100
-        y: 25
-        width: 15
-        height: 15
+        x: 85
+        y: 435
+        width: 80
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_10
-      rect:
-        serializedVersion: 2
-        x: 120
-        y: 25
-        width: 15
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_11
-      rect:
-        serializedVersion: 2
-        x: 140
-        y: 25
-        width: 15
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_12
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 25
-        width: 15
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_13
-      rect:
-        serializedVersion: 2
-        x: 180
-        y: 25
-        width: 15
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: UI Spritesheet_14
-      rect:
-        serializedVersion: 2
-        x: 200
-        y: 25
-        width: 15
-        height: 15
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 5, y: 5, z: 5, w: 5}
+      border: {x: 10, y: 10, z: 65, w: 65}
       outline: []
       physicsShape: []
       tessellationDetail: 0
