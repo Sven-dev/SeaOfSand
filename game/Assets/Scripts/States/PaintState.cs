@@ -13,6 +13,7 @@ public class PaintState : State
 
         Joycons.OnLeftStick += Cursor.Move;
         Joycons.OnA += BlockPainter.Paint;
+        Joycons.OnX += Cursor.Temp;
     }
 
     public override void Disable()
@@ -21,5 +22,6 @@ public class PaintState : State
 
         Joycons.OnLeftStick -= Cursor.Move;
         Joycons.OnA -= BlockPainter.Paint;
+        Joycons.OnX -= Cursor.Temp;
     }
 }
