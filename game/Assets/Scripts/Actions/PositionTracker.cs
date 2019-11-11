@@ -6,7 +6,6 @@
 public class PositionTracker : Action
 {
     public Block Block;
-
     public Vector3 From;
 
     public PositionTracker(Block block, Vector3 from)

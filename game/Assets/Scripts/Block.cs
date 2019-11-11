@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour {
-
-    private MeshRenderer Mesh;
+public class Block : MonoBehaviour
+{
+    [HideInInspector]
+    public MeshRenderer Mesh;
     private Collider Collider;
     private GameObject Colliders;
 

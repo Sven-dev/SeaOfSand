@@ -9,15 +9,7 @@ public class BlockPainter : MonoBehaviour
 
     public Material CurrentColour;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public PaintTracker Tracker;
 
     public void Paint()
     {
@@ -28,7 +20,13 @@ public class BlockPainter : MonoBehaviour
             if (hit.collider.tag == "CubeEdge")
             {
                 Block block = hit.transform.GetComponentInParent<Block>();
+
+                Tracker = new PaintTracker(block.Mesh.material);
+                ActionManager.AddAction(Tracker);
+
                 block.Paint(CurrentColour);
+                Tracker.AddBlock(block);
+
                 StartCoroutine(_Painting());
             }
         }
@@ -46,6 +44,7 @@ public class BlockPainter : MonoBehaviour
                 {
                     Block block = hit.transform.GetComponentInParent<Block>();
                     block.Paint(CurrentColour);
+                    Tracker.AddBlock(block);
                 }
             }
 

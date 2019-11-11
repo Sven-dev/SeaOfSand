@@ -11,6 +11,8 @@ public class StateManager : MonoBehaviour
     public int ActiveIndex = -1;
     public List<State> States;
 
+    public Transform StateUI;
+
     private void Start()
     {
         Joycons.OnDRight += ChangeToMove;
@@ -25,9 +27,7 @@ public class StateManager : MonoBehaviour
     {
         if (ActiveIndex != 0)
         {
-            States[ActiveIndex].Disable();
-            ActiveIndex = 0;
-            States[ActiveIndex].Enable();
+            Change(0);
         }
     }
 
@@ -35,18 +35,14 @@ public class StateManager : MonoBehaviour
     {
         if (ActiveIndex != 1)
         {
-            States[ActiveIndex].Disable();
-            ActiveIndex = 1;
-            States[ActiveIndex].Enable();
+            Change(1);
         }
     }
     public void ChangeToMultimove()
     {
         if (ActiveIndex != 2)
         {
-            States[ActiveIndex].Disable();
-            ActiveIndex = 2;
-            States[ActiveIndex].Enable();
+            Change(2);
         }
     }
 
@@ -54,9 +50,16 @@ public class StateManager : MonoBehaviour
     {
         if (ActiveIndex != 3)
         {
-            States[ActiveIndex].Disable();
-            ActiveIndex = 3;
-            States[ActiveIndex].Enable();
+            Change(3);
         }
+    }
+
+    private void Change(int state)
+    {
+        States[ActiveIndex].Disable();
+        StateUI.GetChild(ActiveIndex).gameObject.SetActive(false);
+        ActiveIndex = state;
+        States[ActiveIndex].Enable();
+        StateUI.GetChild(ActiveIndex).gameObject.SetActive(true);
     }
 }
