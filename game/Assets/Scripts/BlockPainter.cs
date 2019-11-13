@@ -6,18 +6,11 @@ public class BlockPainter : MonoBehaviour
 {
     [HideInInspector]
     public bool Active = true;
-
-    public Material tempmaterial;
-    public static Material CurrentColour;
-
     public PaintTracker Tracker;
 
-    private void Start()
-    {
-        CurrentColour = tempmaterial;
-    }
+    private Color CurrentColour;
 
-    public static void SetColour(Material colour)
+    public void SetColour(Color colour)
     {
         CurrentColour = colour;
     }
@@ -32,7 +25,7 @@ public class BlockPainter : MonoBehaviour
             {
                 Block block = hit.transform.GetComponentInParent<Block>();
 
-                Tracker = new PaintTracker(block.Mesh.material);
+                Tracker = new PaintTracker(block.Mesh.material.color);
                 ActionManager.AddAction(Tracker);
 
                 block.Paint(CurrentColour);

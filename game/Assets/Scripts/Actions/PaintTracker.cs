@@ -5,11 +5,11 @@ using UnityEngine;
 public class PaintTracker : Action
 {
     public List<Block> Blocks = new List<Block>();
-    public Material OldColour;
+    public Color OldColour;
 
-    public PaintTracker(Material old)
+    public PaintTracker(Color old)
     {
-        OldColour = new Material(old);
+        OldColour = old;
     }
 
     public void AddBlock(Block block)

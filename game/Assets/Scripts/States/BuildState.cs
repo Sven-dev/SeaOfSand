@@ -6,11 +6,12 @@ public class BuildState : State
 {
     public BlockPlacer BlockPlacer;
     public DiagonalCursor Cursor;
+    public ColourManager ColourManager;
 
     public override void Enable()
     {
         Joycons.OnA += BlockPlacer.Place;
-        Joycons.OnY += BlockPlacer.Rotate;
+        Joycons.OnY += ColourManager.ChangeColour;
 
         Joycons.OnLeftStick += Cursor.Move;
 
@@ -21,7 +22,7 @@ public class BuildState : State
     public override void Disable()
     {
         Joycons.OnA -= BlockPlacer.Place;
-        Joycons.OnY -= BlockPlacer.Rotate;
+        Joycons.OnY -= ColourManager.ChangeColour;
 
         Joycons.OnLeftStick -= Cursor.Move;
 

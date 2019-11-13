@@ -5,10 +5,13 @@ using UnityEngine.UI;
 
 public class BlockPlacer : MonoBehaviour
 {
+    public LayerMask Mask;
+
     [HideInInspector]
     public bool Active = false;
 
-    public GameObject PreviewPrefab;
+    [HideInInspector]
+    public Transform Preview;
     public Block Prefab;
 
     private float Yaxis;
@@ -35,9 +38,46 @@ public class BlockPlacer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the block and preview
+    /// </summary>
+    /// <param name="block">The new block</param>
+    public void UpdateBlock(Block block)
+    {
+        Prefab = block;
+        if (Preview != null)
+        {
+            Vector3 position = Preview.position;
+            Destroy(Preview.gameObject);
+            InstantiatePreview(position);
+        }
+    }
+
+    /// <summary>
+    /// Instantiate a preview version of the prefab block
+    /// </summary>
+    private void InstantiatePreview(Vector3 position)
+    {
+        //Instantiate the prefab
+        Preview = Instantiate(Prefab, position, Quaternion.Euler(Rotation)).transform;
+        Material material = Preview.GetComponent<MeshRenderer>().material;
+
+        //Make the material 50% transparent
+        StandardShaderUtils.ChangeRenderMode(material, StandardShaderUtils.BlendMode.Transparent);
+        Color c = material.color;
+        c.a = 0.5f;
+        material.color = c;
+
+        //Destroy any components that are exclusive to Blocks
+        Destroy(Preview.GetComponent<Block>());
+        foreach (Transform t in Preview)
+        {
+            Destroy(t.gameObject);
+        }
+    }
+
     IEnumerator _Preview()
     {     
-        Transform Preview = null;
         while (Active)
         {
             if (!Joycons.A)
@@ -51,19 +91,19 @@ public class BlockPlacer : MonoBehaviour
                         //Move the preview
                         if (Preview != null)
                         {
-                            Preview.position = hit.transform.position;
+                            Preview.transform.position = hit.transform.position;
                         }
                         //Instantiate the preview
                         else
                         {
-                            Preview = Instantiate(PreviewPrefab, hit.transform.position, Quaternion.Euler(Rotation)).transform;
+                            InstantiatePreview(hit.transform.position);
                         }
                     }
                 }
 
                 if (Preview != null)
                 {
-                    Preview.rotation = Quaternion.Euler(Rotation);
+                    Preview.transform.rotation = Quaternion.Euler(Rotation);
                 }
             }
             else if (Preview != null)
@@ -74,8 +114,11 @@ public class BlockPlacer : MonoBehaviour
             yield return null;
         }
 
-        Destroy(Preview.gameObject);
         Rotation = Vector3.zero;
+        if (Preview != null)
+        {
+            Destroy(Preview.gameObject);
+        }
     }
 
     /// <summary>
@@ -85,7 +128,7 @@ public class BlockPlacer : MonoBehaviour
     {
         //Raycast
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, Mask))
         {
             //Check if a block is hit
             if (hit.collider.tag == "CubeEdge")

@@ -6,6 +6,7 @@ public class PaintState : State
 {
     public BlockPainter BlockPainter;
     public DiagonalCursor Cursor;
+    public RecolourManager RecolourManager;
 
     public override void Enable()
     {
@@ -13,7 +14,7 @@ public class PaintState : State
 
         Joycons.OnLeftStick += Cursor.Move;
         Joycons.OnA += BlockPainter.Paint;
-        Joycons.OnX += Cursor.Temp;
+        Joycons.OnY += RecolourManager.ChangeColour;
     }
 
     public override void Disable()
@@ -22,6 +23,6 @@ public class PaintState : State
 
         Joycons.OnLeftStick -= Cursor.Move;
         Joycons.OnA -= BlockPainter.Paint;
-        Joycons.OnX -= Cursor.Temp;
+        Joycons.OnY += RecolourManager.ChangeColour;
     }
 }
