@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23517073428756380}
   - component: {fileID: 65832306381269090}
   - component: {fileID: 114231408450465972}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WhiteCube
   m_TagString: Immovable
   m_Icon: {fileID: 0}
@@ -39,9 +39,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4744673280475544}
   - component: {fileID: 65040671121442216}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hitbox
-  m_TagString: CubeEdge
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -55,9 +55,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4416274126483524}
   - component: {fileID: 65736419732453376}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hitbox
-  m_TagString: CubeEdge
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,9 +71,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4389995504790340}
   - component: {fileID: 65305658191956526}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hitbox
-  m_TagString: CubeEdge
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87,9 +87,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4983479485430064}
   - component: {fileID: 65542484632707842}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hitbox
-  m_TagString: CubeEdge
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,9 +103,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4076699035110354}
   - component: {fileID: 65615944299768162}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hitbox
-  m_TagString: CubeEdge
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,9 +119,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4084085248994202}
   - component: {fileID: 65491574315239196}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Hitbox
-  m_TagString: CubeEdge
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -234,7 +234,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1128445009507458}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.7196965, y: 0.69636273, z: 6.6251583}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4652558971615582}
@@ -417,3 +417,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed3942b3741b1ed468c55b89038ade18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Mesh: {fileID: 0}

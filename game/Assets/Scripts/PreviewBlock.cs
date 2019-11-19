@@ -4,17 +4,26 @@ using UnityEngine;
 
 public class PreviewBlock : MonoBehaviour
 {
-    [HideInInspector]
-    public MeshRenderer Mesh;
+    private MeshRenderer Mesh;
+
+    public Color Colour
+    {
+        get
+        {
+            Color c = Mesh.material.color;
+            c.a = 0;
+            return c;
+        }
+        set { Mesh.material.color = value; }
+    }
 
     public Material Material
     {
         get { return Mesh.material; }
-        set { Mesh.material = value; }
     }
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         Mesh = GetComponent<MeshRenderer>();
     }

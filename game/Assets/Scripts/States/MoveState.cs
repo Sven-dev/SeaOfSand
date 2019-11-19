@@ -9,19 +9,21 @@ public class MoveState : State
 
     public override void Enable()
     {
+        base.Enable();
+
         Joycons.OnA += BlockGrabber.Grab;
         Joycons.OnLeftStick += Cursor.Move;
 
         BlockGrabber.Toggle();
-        base.Enable();
     }
 
     public override void Disable()
     {
+        base.Disable();
+
         Joycons.OnA -= BlockGrabber.Grab;
         Joycons.OnLeftStick -= Cursor.Move;
 
         BlockGrabber.Toggle();
-        base.Disable();
     }
 }
