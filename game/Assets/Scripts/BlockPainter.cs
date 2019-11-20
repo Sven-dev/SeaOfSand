@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BlockPainter : MonoBehaviour
 {
-    [HideInInspector]
     public bool Active = false;
     [HideInInspector]
     public PaintTracker Tracker;
@@ -40,6 +39,8 @@ public class BlockPainter : MonoBehaviour
         {
             while (!Painting)
             {
+                if (!Active) break;
+
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.yellow);
                 //Show the preview colour
                 RaycastHit hit;

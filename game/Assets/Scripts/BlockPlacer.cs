@@ -62,6 +62,9 @@ public class BlockPlacer : MonoBehaviour
         //Instantiate the prefab
         Preview = Instantiate(Prefab, position, Quaternion.Euler(Rotation)).gameObject.AddComponent<PreviewBlock>();
 
+        //Change the layer, so it doesn't get tagged by raycasts
+        Preview.gameObject.layer = 0;
+
         //Make the material 50% transparent
         StandardShaderUtils.ChangeRenderMode(Preview.Material, StandardShaderUtils.BlendMode.Transparent);
         Color c = ColourManager.Colour;

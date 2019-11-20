@@ -1111,48 +1111,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4516864976446904, guid: 5f89ea9e2692a2541a7f020b6e581827,
     type: 2}
   m_PrefabInternal: {fileID: 352973461}
---- !u!1001 &356801453
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4598679448970436, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &366374253
 Prefab:
   m_ObjectHideFlags: 0
@@ -1277,8 +1235,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18c469d6e24478346936c320e8698a5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 3.33
+  Speed: 7.5
   CameraManager: {fileID: 1893765435}
+  DiagonalSpeed: 3.33
 --- !u!114 &369809512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1310,7 +1269,7 @@ MonoBehaviour:
     m_Bits: 2048
   Active: 0
   Preview: {fileID: 0}
-  Prefab: {fileID: 114164979670081818, guid: d5abb0ca63457b74fab580f8bb5a2754, type: 2}
+  Prefab: {fileID: 114164979670081818, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
   ColourManager: {fileID: 531967374}
 --- !u!114 &369809514
 MonoBehaviour:
@@ -1343,8 +1302,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   Active: 0
-  PreviewPrefab: {fileID: 1193705814772536, guid: bc2ed3f305beebd469b860535b9e10ff,
-    type: 2}
 --- !u!1001 &399058224
 Prefab:
   m_ObjectHideFlags: 0
@@ -4482,7 +4439,7 @@ GameObject:
   - component: {fileID: 1262659844}
   - component: {fileID: 1262659843}
   m_Layer: 5
-  m_Name: Dostroy
+  m_Name: Destroy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4526,7 +4483,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300006, guid: 368f26f2e2b31ca41b7947c73b0b444b, type: 3}
+  m_Sprite: {fileID: 21300004, guid: 368f26f2e2b31ca41b7947c73b0b444b, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5640,7 +5597,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300004, guid: 368f26f2e2b31ca41b7947c73b0b444b, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 368f26f2e2b31ca41b7947c73b0b444b, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5811,7 +5768,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300002, guid: 368f26f2e2b31ca41b7947c73b0b444b, type: 3}
+  m_Sprite: {fileID: 21300006, guid: 368f26f2e2b31ca41b7947c73b0b444b, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

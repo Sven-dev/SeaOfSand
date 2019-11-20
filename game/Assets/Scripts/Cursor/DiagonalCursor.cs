@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class DiagonalCursor : Cursor
 {
+    [Space]
+    public float DiagonalSpeed;
+
     public override void Move(float[] stick)
     {
         if (Joycons.A)
@@ -36,7 +39,7 @@ public class DiagonalCursor : Cursor
             }
             #endregion
 
-            transform.Translate(direction * Speed * Time.deltaTime, Space.Self);
+            transform.Translate(direction * DiagonalSpeed * Time.deltaTime, Space.Self);
             Clamp(stick);
         }
         else

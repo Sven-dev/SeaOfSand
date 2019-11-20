@@ -10,8 +10,7 @@ public class BlockGrabber : MonoBehaviour
     [HideInInspector]
     public bool Active = false;
 
-    public GameObject PreviewPrefab;
-
+    private PreviewBlock Preview;
     private Block GrabbedBlock;
     private Vector3 Rotation = Vector3.zero;
 
@@ -35,6 +34,8 @@ public class BlockGrabber : MonoBehaviour
         {
             //Grab the block
             GrabbedBlock = hit.transform.GetComponentInParent<Block>();
+
+            //Turn off the colliders & mesh
             GrabbedBlock.Toggle();
 
             StartCoroutine(_Grab());
@@ -46,7 +47,7 @@ public class BlockGrabber : MonoBehaviour
     IEnumerator _Grab()
     {
         //Instantiate a preview of the block
-        Transform Preview = Instantiate(PreviewPrefab, GrabbedBlock.transform.position, Quaternion.Euler(Rotation)).transform;
+        InstantiatePreview(GrabbedBlock.transform.position);
         while (Active && Joycons.A)
         {
             //Raycast on the cursor position
@@ -55,7 +56,7 @@ public class BlockGrabber : MonoBehaviour
             if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, MoveMask))
             {
                 //Move the preview
-                Preview.position = hit.transform.position;
+                Preview.transform.position = hit.transform.position;
             }
             Debug.DrawLine(transform.position, transform.TransformDirection(Vector3.forward) * 100, Color.yellow, 3);
 
@@ -63,12 +64,12 @@ public class BlockGrabber : MonoBehaviour
             if (Joycons.LeftBumper)
             {
                 Rotation -= Vector3.up * 90;
-                Preview.rotation = Quaternion.Euler(Rotation);
+                Preview.transform.rotation = Quaternion.Euler(Rotation);
             }
             else if (Joycons.RightBumper)
             {
                 Rotation += Vector3.up * 90;
-                Preview.rotation = Quaternion.Euler(Rotation);
+                Preview.transform.rotation = Quaternion.Euler(Rotation);
             }
             
             yield return null;
@@ -78,7 +79,7 @@ public class BlockGrabber : MonoBehaviour
         ActionManager.AddAction(new PositionTracker(GrabbedBlock, GrabbedBlock.transform.position));
 
         //Place the grabbed block on the preview position
-        GrabbedBlock.transform.position = Preview.position;
+        GrabbedBlock.transform.position = Preview.transform.position;
         GrabbedBlock.transform.rotation = Quaternion.Euler(Rotation);
         GrabbedBlock.Toggle();
 
@@ -86,5 +87,37 @@ public class BlockGrabber : MonoBehaviour
         Destroy(Preview.gameObject);
         GrabbedBlock = null;
         Rotation = Vector3.zero;
+    }
+
+    /// <summary>
+    /// Instantiate a preview version of the prefab block
+    /// </summary>
+    private void InstantiatePreview(Vector3 position)
+    {
+        //Instantiate the prefab
+        Preview = Instantiate(GrabbedBlock, position, Quaternion.Euler(Rotation)).gameObject.AddComponent<PreviewBlock>();
+
+        //Change the layer, so it doesn't get tagged by raycasts
+        Preview.gameObject.layer = 0;
+
+        //Make the material 50% transparent
+        StandardShaderUtils.ChangeRenderMode(Preview.Material, StandardShaderUtils.BlendMode.Transparent);
+        Color c = GrabbedBlock.Colour;
+        c.a = 0.75f;
+        Preview.Material.color = c;
+
+        //Destroy any components that are exclusive to Blocks
+        Block b = Preview.GetComponent<Block>();
+        b.Toggle();
+        Destroy(b);
+        foreach (Transform t in Preview.transform)
+        {
+            Destroy(t.gameObject);
+        }
+
+        if (GrabbedBlock.name == Preview.name)
+        {
+            print("ash");
+        }
     }
 }
