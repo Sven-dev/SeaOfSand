@@ -39,6 +39,7 @@ public class Block : MonoBehaviour
         Colliders = transform.GetChild(1).gameObject;
 
         _Colour = Material.color;
+        print(name + ": " + Colour);
 	}
 
     /// <summary>

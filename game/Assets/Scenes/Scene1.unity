@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1256,6 +1256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13e60ec7ad7a9c45961ad8560a0813a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RaycastMask:
+    serializedVersion: 2
+    m_Bits: 1024
   Active: 0
 --- !u!222 &369809510
 CanvasRenderer:
@@ -1307,7 +1310,7 @@ MonoBehaviour:
     m_Bits: 2048
   Active: 0
   Preview: {fileID: 0}
-  Prefab: {fileID: 114164979670081818, guid: e1464f52709c32d4bbbad17df8ffb16f, type: 2}
+  Prefab: {fileID: 114164979670081818, guid: d5abb0ca63457b74fab580f8bb5a2754, type: 2}
   ColourManager: {fileID: 531967374}
 --- !u!114 &369809514
 MonoBehaviour:
@@ -1333,6 +1336,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd98f4395493c5e488431249e82ffa62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RaycastMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  MoveMask:
+    serializedVersion: 2
+    m_Bits: 2048
   Active: 0
   PreviewPrefab: {fileID: 1193705814772536, guid: bc2ed3f305beebd469b860535b9e10ff,
     type: 2}

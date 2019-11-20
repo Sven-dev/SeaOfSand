@@ -5,6 +5,8 @@ using UnityEngine;
 /// Allows the player to grab and let go of blocks
 public class BlockGrabber : MonoBehaviour
 {
+    public LayerMask RaycastMask, MoveMask;
+
     [HideInInspector]
     public bool Active = false;
 
@@ -27,18 +29,15 @@ public class BlockGrabber : MonoBehaviour
     public void Grab()
     {
         //Raycast on the cursor position
+        //Check if the side of a cube is hit
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, RaycastMask))
         {
-            //Check if the side of a cube is hit
-            if (hit.collider.tag == "CubeEdge" && hit.transform.parent.parent.tag != "Immovable")
-            {
-                //Grab the block
-                GrabbedBlock = hit.transform.GetComponentInParent<Block>();
-                GrabbedBlock.Toggle();
+            //Grab the block
+            GrabbedBlock = hit.transform.GetComponentInParent<Block>();
+            GrabbedBlock.Toggle();
 
-                StartCoroutine(_Grab());
-            }
+            StartCoroutine(_Grab());
         }
 
         Debug.DrawLine(transform.position, transform.TransformDirection(Vector3.forward) * 100, Color.yellow, 3);
@@ -51,16 +50,14 @@ public class BlockGrabber : MonoBehaviour
         while (Active && Joycons.A)
         {
             //Raycast on the cursor position
+            //Check if a block is hit
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, MoveMask))
             {
-                //Check if a block is hit
-                if (hit.collider.tag == "CubeEdge")
-                {
-                    //Move the preview
-                    Preview.position = hit.transform.position;
-                }
+                //Move the preview
+                Preview.position = hit.transform.position;
             }
+            Debug.DrawLine(transform.position, transform.TransformDirection(Vector3.forward) * 100, Color.yellow, 3);
 
             //Rotate the preview left or right
             if (Joycons.LeftBumper)

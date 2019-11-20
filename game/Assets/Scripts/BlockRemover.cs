@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BlockRemover : MonoBehaviour
 {
+    public LayerMask RaycastMask;
+
     [HideInInspector]
     public bool Active = false;
 
@@ -13,19 +15,16 @@ public class BlockRemover : MonoBehaviour
     public void Remove()
     {
         //Raycast on the cursor position
+        //Check if a block is hit
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, RaycastMask))
         {
-            //Check if a block is hit
-            if (hit.collider.tag == "CubeEdge" && hit.transform.parent.parent.tag != "Immovable")
-            {
-                //Disable the block
-                Block b = hit.transform.GetComponentInParent<Block>();
-                b.Toggle();
+            //Disable the block
+            Block b = hit.transform.GetComponentInParent<Block>();
+            b.Toggle();
 
-                //Add the block to undo list
-                ActionManager.AddAction(new DestroyedBlock(b));
-            }
+            //Add the block to undo list
+            ActionManager.AddAction(new DestroyedBlock(b));         
         }     
     }
 }

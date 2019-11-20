@@ -40,39 +40,30 @@ public class BlockPainter : MonoBehaviour
         {
             while (!Painting)
             {
+                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.yellow);
                 //Show the preview colour
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, RaycastMask))
                 {
-                    //Check if a block is hit
-                    if (hit.collider.tag == "CubeEdge" && hit.transform.parent.parent.tag != "Immovable")
+                    Block block = hit.transform.GetComponent<Block>();
+                    if (PreviewBlock == null)
                     {
-                        Block block = hit.transform.GetComponentInParent<Block>();
-                        if (PreviewBlock == null)
-                        {
-                            //Set the preview block
-                            PreviewBlock = block;
-                            PreviewColour = block.Colour;
-                        }
-                        else if (block != PreviewBlock)
-                        {
-                            //Change the preview block
-                            PreviewBlock.Colour = PreviewColour;
-                            PreviewBlock = block;
-                            PreviewColour = block.Colour;
-                        }
-
-                        if (PreviewBlock.Colour != CurrentColour)
-                        {
-                            //paint it
-                            PreviewBlock.Colour = CurrentColour;
-                        }
+                        //Set the preview block
+                        PreviewBlock = block;
+                        PreviewColour = block.Colour;
                     }
-                    else if (PreviewBlock != null)
+                    else if (block != PreviewBlock)
                     {
-                        //Paint the block back to the original colour
+                        //Change the preview block
                         PreviewBlock.Colour = PreviewColour;
-                        PreviewBlock = null;
+                        PreviewBlock = block;
+                        PreviewColour = block.Colour;
+                    }
+
+                    if (PreviewBlock.Colour != CurrentColour)
+                    {
+                        //paint it
+                        PreviewBlock.Colour = CurrentColour;
                     }
                 }
                 else if (PreviewBlock != null)
@@ -104,22 +95,19 @@ public class BlockPainter : MonoBehaviour
 
     public void Paint()
     {
+        //Check if a block is hit
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, RaycastMask))
         {
-            //Check if a block is hit
-            if (hit.collider.tag == "CubeEdge" && hit.transform.parent.parent.tag != "Immovable")
-            {
-                Block block = hit.transform.GetComponentInParent<Block>();
+            Block block = hit.transform.GetComponentInParent<Block>();
 
-                Tracker = new PaintTracker(block.Colour);
-                ActionManager.AddAction(Tracker);
+            Tracker = new PaintTracker(block.Colour);
+            ActionManager.AddAction(Tracker);
 
-                block.Paint(CurrentColour);
-                Tracker.AddBlock(block);
+            block.Paint(CurrentColour);
+            Tracker.AddBlock(block);
 
-                StartCoroutine(_Painting());
-            }
+            StartCoroutine(_Painting());
         }
     }
 
@@ -128,17 +116,14 @@ public class BlockPainter : MonoBehaviour
         Painting = true;
         while (Active && Joycons.A)
         {
+            //Check if a block is hit
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, RaycastMask))
             {
-                //Check if a block is hit
-                if (hit.collider.tag == "CubeEdge" && hit.transform.parent.parent.tag != "Immovable")
-                {
-                    Block block = hit.transform.GetComponentInParent<Block>();
+                Block block = hit.transform.GetComponentInParent<Block>();
 
-                    block.Paint(CurrentColour);
-                    Tracker.AddBlock(block);
-                }
+                block.Paint(CurrentColour);
+                Tracker.AddBlock(block);            
             }
 
             yield return null;
